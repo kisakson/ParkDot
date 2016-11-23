@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <TextView
+        android:text="Set Expiration Time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/exp_time_label"
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:layout_gravity="center" />
+
+    <TimePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/exp_time"
+        android:layout_weight="1"
+        android:timePickerMode="spinner" />
+
+    <TextView
+        android:text="Notify me..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/notify_time_label"
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center">
+
+        <NumberPicker
+            android:id="@+id/notify_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_gravity="center" />
+
+        <NumberPicker
+            android:id="@+id/notify_minutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+    <TextView
+        android:text="before expiration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/before_exp_label"
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:layout_gravity="center" />
+
+    <CheckBox
+        android:text="I do NOT want to be notified"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/notify_checkbox"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:text="Next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/next_button"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:onClick="onExpirationTimeNextButtonClick"
+        android:layout_marginTop="30dp" />
+
+
+</LinearLayout>
