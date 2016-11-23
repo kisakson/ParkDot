@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".ParkingTicketActivity">
         </activity>
+        <activity android:name=".ParkingNoteActivity">
+        </activity>
         <activity android:name=".ConfirmationActivity">
         </activity>
     </application>

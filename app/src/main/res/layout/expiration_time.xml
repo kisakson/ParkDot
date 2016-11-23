@@ -9,7 +9,6 @@
         android:text="Set Expiration Time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/exp_time_label"
         android:layout_weight="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:layout_gravity="center" />
@@ -25,11 +24,9 @@
         android:text="Notify me..."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/notify_time_label"
         android:layout_weight="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp" />
+        android:layout_gravity="center"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -55,10 +52,9 @@
     </LinearLayout>
 
     <TextView
-        android:text="before expiration"
+        android:text="...before expiration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/before_exp_label"
         android:layout_weight="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:layout_gravity="center" />
@@ -76,7 +72,7 @@
         android:text="Next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/next_button"
+        android:id="@+id/expiration_time_next_button"
         android:layout_weight="1"
         android:layout_gravity="center"
         android:onClick="onExpirationTimeNextButtonClick"

@@ -25,7 +25,7 @@ public class ParkingTicketActivity extends Activity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        Intent intent2 = new Intent(ParkingTicketActivity.this, ConfirmationActivity.class);
+        Intent intent2 = new Intent(ParkingTicketActivity.this, ParkingNoteActivity.class);
         finish();
         intent2.putExtras(bundle);
         startActivity(intent2);

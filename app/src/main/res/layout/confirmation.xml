@@ -10,7 +10,7 @@
     android:padding="20dp">
 
     <TextView
-        android:text="Parking Confirmation"
+        android:text="New Parking Spot Confirmation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
@@ -62,37 +62,31 @@
         android:layout_marginLeft="20dp" />
 
     <TextView
-        android:text="Parking Ticket:"
+        android:text="Notify me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView3"
+        android:id="@+id/notify_me_with_label"
         android:layout_column="0"
         android:layout_row="3"
+        android:layout_columnSpan="2"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:layout_marginTop="20dp" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/parking_ticket_img"
-        android:layout_column="1"
-        android:layout_row="3"
         android:layout_marginTop="20dp"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
+        android:layout_gravity="center_horizontal" />
 
     <TextView
-        android:text="Note:"
+        android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView4"
+        android:id="@+id/notify_type_text"
         android:layout_column="0"
         android:layout_row="4"
         android:layout_columnSpan="2"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center_horizontal" />
 
     <TextView
-        android:text="None"
+        android:text="No notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/note_text"
