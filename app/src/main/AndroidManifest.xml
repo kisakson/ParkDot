@@ -15,9 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ExpirationTime">
+        <activity android:name=".ExpirationTimeActivity">
         </activity>
-        <activity android:name=".ParkingTicket">
+        <activity android:name=".ParkingTicketActivity">
+        </activity>
+        <activity android:name=".ConfirmationActivity">
         </activity>
     </application>
 

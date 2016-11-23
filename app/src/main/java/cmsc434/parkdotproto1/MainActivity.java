@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAddParkingSpotClick(View v) {
-        Intent intent = new Intent(MainActivity.this, ExpirationTime.class);
+        Intent intent = new Intent(MainActivity.this, ExpirationTimeActivity.class);
         startActivity(intent);
     }
 }

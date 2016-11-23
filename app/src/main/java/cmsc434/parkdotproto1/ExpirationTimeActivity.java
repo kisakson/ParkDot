@@ -1,7 +1,9 @@
 package cmsc434.parkdotproto1;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +14,7 @@ import android.widget.TimePicker;
  * Created by hojinskang on 11/22/16.
  */
 
-public class ExpirationTime extends Activity {
+public class ExpirationTimeActivity extends Activity {
     private TimePicker expirationTime;
     private NumberPicker notifyTime, notifyMinutes;
     private Button nextButton;
@@ -38,8 +40,16 @@ public class ExpirationTime extends Activity {
         notifyMinutes.setDisplayedValues( new String[] { "minutes" } );
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     public void onExpirationTimeNextButtonClick(View v) {
-        Intent intent = new Intent(ExpirationTime.this, ParkingTicket.class);
+        Intent intent = new Intent(ExpirationTimeActivity.this, ParkingTicketActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("expirationHour", expirationTime.getHour());
+        bundle.putInt("expirationMinute", expirationTime.getMinute());
+        bundle.putInt("notifyTime", notifyTime.getValue());
+        intent.putExtras(bundle);
+
         startActivity(intent);
     }
 }
