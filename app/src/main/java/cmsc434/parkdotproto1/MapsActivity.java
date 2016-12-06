@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +28,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
@@ -171,7 +174,7 @@ public class MapsActivity extends AppCompatActivity implements
                 mSavedLocation = mMap.addMarker(new MarkerOptions()
                         .position(loc)
                         .title("Saved Parking Location")
-                        .snippet(loc.toString()));
+                        .snippet(loc.toString()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.car)));
 
                 addParkingSpotButton.setVisibility(View.INVISIBLE);
                 getDirectionsButton.setVisibility(View.VISIBLE);
@@ -352,7 +355,7 @@ public class MapsActivity extends AppCompatActivity implements
                     mSavedLocation = mMap.addMarker(new MarkerOptions()
                             .position(loc)
                             .title("Saved Parking Location")
-                            .snippet(loc.toString()));
+                            .snippet(loc.toString()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.car)));
 
                     // Rayna's code here
                     Bundle bundle = data.getExtras();
