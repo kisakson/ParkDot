@@ -1,6 +1,8 @@
 package cmsc434.parkdotproto1;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -72,6 +74,12 @@ public class MapsActivity extends AppCompatActivity implements
 
     // Create a Marker object that will store vehicle location
     private Marker mSavedLocation;
+    private boolean mRunOnce = false;
+
+    // Create SharedPreferences to store Marker location.
+    // Information gathered from: https://developer.android.com/training/basics/data-storage/shared-preferences.html
+    private SharedPreferences mSharedPref;
+    private SharedPreferences.Editor mEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,17 +102,21 @@ public class MapsActivity extends AppCompatActivity implements
 
         addParkingSpotButton = (Button) findViewById(R.id.add_parking_spot_button);
         getDirectionsButton = (Button) findViewById(R.id.get_directions_button);
+
+        // Initialize the SharedPreferences objects
+        mSharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        mEditor = mSharedPref.edit();
     }
 
     // Function called when map is ready after onCreate
     @Override
     public void onMapReady(GoogleMap inMap) {
-        this.mMap = inMap;
+        mMap = inMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         updateLocationUI();
         // Add sample marker
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
@@ -138,6 +150,26 @@ public class MapsActivity extends AppCompatActivity implements
             Log.d(TAG, "Current location is null. Using defaults.");
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+
+        // Get saved marker location, if stored
+        // This should only run once.
+        if (mMap != null && !mRunOnce) {
+            String savedLoc = mSharedPref.getString(getString(R.string.saved_marker_location), "");
+            if (!savedLoc.equals("")) {
+                LatLng loc = new LatLng(Double.parseDouble(savedLoc.split(",")[0]),
+                        Double.parseDouble(savedLoc.split(",")[1]));
+
+                mSavedLocation = mMap.addMarker(new MarkerOptions()
+                        .position(loc)
+                        .title("Saved Parking Location")
+                        .snippet(loc.toString()));
+
+                addParkingSpotButton.setVisibility(View.INVISIBLE);
+                getDirectionsButton.setVisibility(View.VISIBLE);
+            }
+
+            mRunOnce = true;
         }
     }
 
@@ -284,6 +316,8 @@ public class MapsActivity extends AppCompatActivity implements
     public void onGetDirectionsClick(View v) {
         addParkingSpotButton.setVisibility(View.VISIBLE);
         getDirectionsButton.setVisibility(View.INVISIBLE);
+        mEditor.clear();
+        mEditor.commit();
         mSavedLocation.remove();
     }
 
@@ -298,10 +332,19 @@ public class MapsActivity extends AppCompatActivity implements
                 if (resultCode == RESULT_OK) {
                     addParkingSpotButton.setVisibility(View.INVISIBLE);
                     getDirectionsButton.setVisibility(View.VISIBLE);
+
+                    LatLng loc = new LatLng(mCurrentLocation.getLatitude(),
+                            mCurrentLocation.getLongitude());
+
+                    String locString = loc.latitude + "," + loc.longitude;
+
+                    mEditor.putString(getString(R.string.saved_marker_location), locString);
+                    mEditor.commit();
+
                     mSavedLocation = mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(mCurrentLocation.getLatitude(),
-                                        mCurrentLocation.getLongitude()))
-                                .title("Saved Parking Location"));
+                                .position(loc)
+                                .title("Saved Parking Location")
+                                .snippet(loc.toString()));
                 }
             }
         }
