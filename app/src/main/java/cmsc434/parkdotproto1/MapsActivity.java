@@ -343,6 +343,7 @@ public class MapsActivity extends AppCompatActivity implements
         String link = "google.navigation:q=" + markerPos.latitude + "," + markerPos.longitude + "&mode=w";
         Uri gmmIntentUri = Uri.parse(link);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
     }
 
