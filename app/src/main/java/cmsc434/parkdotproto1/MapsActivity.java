@@ -51,12 +51,12 @@ public class MapsActivity extends AppCompatActivity implements
         https://github.com/googlemaps/android-samples/blob/master/tutorials/CurrentPlaceDetailsOnMap/app/src/main/java/com/example/currentplacedetailsonmap/MapsActivityCurrentPlaces.java
         https://github.com/googlemaps/android-samples/blob/master/ApiDemos/app/src/main/java/com/example/mapdemo/BasicMapDemoActivity.java
      */
-    private static final String TAG = MapsActivity.class.getSimpleName();
-    private GoogleMap mMap;
-    private CameraPosition mCameraPosition;
+    private static final String TAG = MapsActivity.class.getSimpleName(); // Used for error logs
+    private GoogleMap mMap; // Map object
+    private CameraPosition mCameraPosition; // Camera position
 
     private GoogleApiClient mGoogleApiClient; // Used for getting device location instead of Location Manager
-    private LocationRequest mLocationRequest;
+    private LocationRequest mLocationRequest; // Used for knowing when to get new location update
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
@@ -68,14 +68,13 @@ public class MapsActivity extends AppCompatActivity implements
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
-    private Location mCurrentLocation;
+    private Location mCurrentLocation; // Current location values
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
     private static final int ADD_PARKING_SPOT_REQUEST_CODE = 103;
 
-
-    Button addParkingSpotButton;
+    Button addParkingSpotButton; // Layout buttons
     Button getDirectionsButton;
     Button clearMarkerButton;
 
@@ -124,8 +123,6 @@ public class MapsActivity extends AppCompatActivity implements
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         updateLocationUI();
-        // Add sample marker
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
