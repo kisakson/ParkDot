@@ -44,7 +44,7 @@ public class MapsActivity extends AppCompatActivity implements
         https://github.com/googlemaps/android-samples/blob/master/ApiDemos/app/src/main/java/com/example/mapdemo/BasicMapDemoActivity.java
      */
     private static final String TAG = MapsActivity.class.getSimpleName();
-    private GoogleMap map;
+    private GoogleMap mMap;
     private CameraPosition mCameraPosition;
 
     private GoogleApiClient mGoogleApiClient; // Used for getting device location instead of Location Manager
@@ -91,14 +91,14 @@ public class MapsActivity extends AppCompatActivity implements
     // Function called when map is ready after onCreate
     @Override
     public void onMapReady(GoogleMap inMap) {
-        this.map = inMap;
-        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        map.getUiSettings().setZoomGesturesEnabled(true);
+        this.mMap = inMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
         updateLocationUI();
         // Add sample marker
-        map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
-        map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             // Return null here, so that getInfoContents() is called next.
             public View getInfoWindow(Marker arg0) {
@@ -121,15 +121,15 @@ public class MapsActivity extends AppCompatActivity implements
 
         // Update map location
         if (mCameraPosition != null) {
-            map.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
         } else if (mCurrentLocation != null) { // cameraPosition null
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(mCurrentLocation.getLatitude(),
                             mCurrentLocation.getLongitude()), DEFAULT_ZOOM));
         } else { // cameraPosition and cameraLocation null
             Log.d(TAG, "Current location is null. Using defaults.");
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-            map.getUiSettings().setMyLocationButtonEnabled(false);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
     }
 
@@ -155,8 +155,8 @@ public class MapsActivity extends AppCompatActivity implements
     // Saves an instance state when the app is paused
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (map != null) {
-            outState.putParcelable(KEY_CAMERA_POSITION, map.getCameraPosition());
+        if (mMap != null) {
+            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
             outState.putParcelable(KEY_LOCATION, mCurrentLocation);
             super.onSaveInstanceState(outState);
         }
@@ -255,15 +255,15 @@ public class MapsActivity extends AppCompatActivity implements
     // Updates UI map based on whether user gave location permission or not.
     @SuppressWarnings("MissingPermission")
     private void updateLocationUI() {
-        if (map == null) {
+        if (mMap == null) {
             return;
         }
         if (mLocationPermissionGranted) {
-            map.setMyLocationEnabled(true);
-            map.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
         } else {
-            map.setMyLocationEnabled(false);
-            map.getUiSettings().setMyLocationButtonEnabled(false);
+            mMap.setMyLocationEnabled(false);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             mCurrentLocation = null;
         }
     }

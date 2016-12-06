@@ -16,6 +16,8 @@ public class ParkingNoteActivity extends Activity {
     private EditText notes;
     private NumberPicker notifyType;
 
+    final private int PARKING_NOTE_REQUEST_CODE = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +38,25 @@ public class ParkingNoteActivity extends Activity {
         bundle.putString("notes", notes.getText().toString());
 
         Intent intent2 = new Intent(ParkingNoteActivity.this, ConfirmationActivity.class);
-        finish();
+        //finish();
         intent2.putExtras(bundle);
-        startActivity(intent2);
+        startActivityForResult(intent2, PARKING_NOTE_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("Testing Parking Note");
+        System.out.println("Parking Note: " + requestCode);
+        System.out.println("Parking Note: " + resultCode);
+
+        switch(requestCode) {
+            case(PARKING_NOTE_REQUEST_CODE) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    setResult(resultCode, data);
+                    finish();
+                }
+            }
+        }
     }
 }
