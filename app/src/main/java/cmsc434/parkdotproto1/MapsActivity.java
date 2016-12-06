@@ -1,21 +1,22 @@
 package cmsc434.parkdotproto1;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -28,13 +29,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.GroundOverlay;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import static cmsc434.parkdotproto1.ConfirmationActivity.MAP_ACTIVITY_REQUEST_CODE;
 
 
 /**
@@ -77,6 +74,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     Button addParkingSpotButton;
     Button getDirectionsButton;
+    Button clearMarkerButton;
 
     // Create a Marker object that will store vehicle location
     private Marker mSavedLocation;
@@ -108,6 +106,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         addParkingSpotButton = (Button) findViewById(R.id.add_parking_spot_button);
         getDirectionsButton = (Button) findViewById(R.id.get_directions_button);
+        clearMarkerButton = (Button) findViewById(R.id.clear_marker_button);
 
         // Initialize the SharedPreferences objects
         mSharedPref = this.getPreferences(Context.MODE_PRIVATE);
@@ -177,6 +176,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                 addParkingSpotButton.setVisibility(View.INVISIBLE);
                 getDirectionsButton.setVisibility(View.VISIBLE);
+                clearMarkerButton.setVisibility(View.VISIBLE);
             }
 
             if (!savedNotes.equals("No notes")) {
@@ -331,16 +331,50 @@ public class MapsActivity extends AppCompatActivity implements
         startActivityForResult(intent, ADD_PARKING_SPOT_REQUEST_CODE);
     }
 
+    // Opens Google Maps app to give walking navigation to parking location from current position
+    // Information given from Google documentation
+    // https://developers.google.com/maps/documentation/android-api/intents
     public void onGetDirectionsClick(View v) {
-        addParkingSpotButton.setVisibility(View.VISIBLE);
-        getDirectionsButton.setVisibility(View.INVISIBLE);
-        mEditor.clear();
-        mEditor.commit();
-        mSavedLocation.remove();
+        LatLng markerPos = mSavedLocation.getPosition();
+        String link = "google.navigation:q=" + markerPos.latitude + "," + markerPos.longitude + "&mode=w";
+        Uri gmmIntentUri = Uri.parse(link);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        startActivity(mapIntent);
+    }
 
-        TextView notes_view = (TextView) findViewById(R.id.note_text);
-        notes_view.setText("");
-        notes_view.setVisibility(View.INVISIBLE);
+    // Give an alert to the user, asking if they want to clear their parking information
+    // If yes, parking information is cleared.
+    public void onClearMarkerClick(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.clear_alert_title)
+                .setMessage(R.string.clear_alert_message)
+                .setCancelable(true)
+                .setIcon(android.R.drawable.ic_dialog_alert);
+
+        builder.setPositiveButton(R.string.clear_okay, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                addParkingSpotButton.setVisibility(View.VISIBLE);
+                getDirectionsButton.setVisibility(View.INVISIBLE);
+                clearMarkerButton.setVisibility(View.INVISIBLE);
+                mEditor.clear();
+                mEditor.commit();
+                mSavedLocation.remove();
+
+                TextView notes_view = (TextView) findViewById(R.id.note_text);
+                notes_view.setText("");
+                notes_view.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        builder.setNegativeButton(R.string.clear_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Do nothing
+            }
+        });
+
+        AlertDialog clearAlert = builder.create();
+        clearAlert.show();
     }
 
     // Get the result from adding a parking spot
@@ -354,6 +388,7 @@ public class MapsActivity extends AppCompatActivity implements
                 if (resultCode == RESULT_OK) {
                     addParkingSpotButton.setVisibility(View.INVISIBLE);
                     getDirectionsButton.setVisibility(View.VISIBLE);
+                    clearMarkerButton.setVisibility(View.VISIBLE);
 
                     LatLng loc = new LatLng(mCurrentLocation.getLatitude(),
                             mCurrentLocation.getLongitude());

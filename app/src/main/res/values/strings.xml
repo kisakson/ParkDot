@@ -3,4 +3,9 @@
     <string name="title_activity_maps">Map</string>
     <string name="saved_marker_location">Marker Location</string>
     <string name="saved_marker_notes">Marker Notes</string>
+
+    <string name="clear_alert_title">Clear Marker Location</string>
+    <string name="clear_alert_message">Are you sure you want to clear your saved parking location?</string>
+    <string name="clear_okay">Clear</string>
+    <string name="clear_cancel">Cancel</string>
 </resources>
