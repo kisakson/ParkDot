@@ -164,6 +164,8 @@ public class MapsActivity extends AppCompatActivity implements
         // This should only run once.
         if (mMap != null && !mRunOnce) {
             String savedLoc = mSharedPref.getString(getString(R.string.saved_marker_location), "");
+            String savedNotes = mSharedPref.getString(getString(R.string.saved_marker_notes), "No notes");
+
             if (!savedLoc.equals("")) {
                 LatLng loc = new LatLng(Double.parseDouble(savedLoc.split(",")[0]),
                         Double.parseDouble(savedLoc.split(",")[1]));
@@ -175,6 +177,14 @@ public class MapsActivity extends AppCompatActivity implements
 
                 addParkingSpotButton.setVisibility(View.INVISIBLE);
                 getDirectionsButton.setVisibility(View.VISIBLE);
+            }
+
+            if (!savedNotes.equals("No notes")) {
+                TextView notes_view = (TextView) findViewById(R.id.note_text);
+                notes_view.setText(savedNotes);
+                notes_view.setVisibility(View.VISIBLE);
+
+                mEditor.putString(getString(R.string.saved_marker_notes), savedNotes);
             }
 
             mRunOnce = true;
@@ -327,6 +337,10 @@ public class MapsActivity extends AppCompatActivity implements
         mEditor.clear();
         mEditor.commit();
         mSavedLocation.remove();
+
+        TextView notes_view = (TextView) findViewById(R.id.note_text);
+        notes_view.setText("");
+        notes_view.setVisibility(View.INVISIBLE);
     }
 
     // Get the result from adding a parking spot
@@ -347,7 +361,6 @@ public class MapsActivity extends AppCompatActivity implements
                     String locString = loc.latitude + "," + loc.longitude;
 
                     mEditor.putString(getString(R.string.saved_marker_location), locString);
-                    mEditor.commit();
 
                     mSavedLocation = mMap.addMarker(new MarkerOptions()
                             .position(loc)
@@ -361,7 +374,10 @@ public class MapsActivity extends AppCompatActivity implements
                         TextView notes_view = (TextView) findViewById(R.id.note_text);
                         notes_view.setText(notes);
                         notes_view.setVisibility(View.VISIBLE);
+
+                        mEditor.putString(getString(R.string.saved_marker_notes), notes);
                     }
+                    mEditor.commit();
                 }
             }
         }
