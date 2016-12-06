@@ -20,6 +20,8 @@ public class ExpirationTimeActivity extends Activity {
     private NumberPicker notifyTime, notifyMinutes;
     private CheckBox notified;
 
+    private static final int EXPIRATION_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +47,9 @@ public class ExpirationTimeActivity extends Activity {
     public void onExpirationTimeNextButtonClick(View v) {
         Intent intent;
         if (notified.isChecked()) {
-            intent = new Intent(ExpirationTimeActivity.this, ConfirmationActivity.class);
+            intent = new Intent(getApplicationContext(), ConfirmationActivity.class);
         } else {
-            intent = new Intent(ExpirationTimeActivity.this, ParkingNoteActivity.class);
+            intent = new Intent(getApplicationContext(), ParkingNoteActivity.class);
         }
 
         Bundle bundle = new Bundle();
@@ -61,6 +63,20 @@ public class ExpirationTimeActivity extends Activity {
         }
         intent.putExtras(bundle);
 
-        startActivity(intent);
+        startActivityForResult(intent, EXPIRATION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+            case(EXPIRATION_REQUEST_CODE) : {
+                if (resultCode == RESULT_OK) {
+                    setResult(resultCode, data);
+                    finish();
+                }
+            }
+        }
     }
 }

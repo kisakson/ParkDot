@@ -1,8 +1,11 @@
 package cmsc434.parkdotproto1;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import static android.view.View.INVISIBLE;
@@ -60,5 +63,13 @@ public class ConfirmationActivity extends Activity {
                 notes.setText(bundle.getString("notes"));
             }
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public void onConfirmationConfirmClick(View v) {
+        Intent resultIntent = getIntent();
+        resultIntent.putExtra("result", true);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
     }
 }

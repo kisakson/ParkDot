@@ -1,6 +1,8 @@
 package cmsc434.parkdotproto1;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,7 +47,7 @@ public class MapsActivity extends AppCompatActivity implements
         https://github.com/googlemaps/android-samples/blob/master/ApiDemos/app/src/main/java/com/example/mapdemo/BasicMapDemoActivity.java
      */
     private static final String TAG = MapsActivity.class.getSimpleName();
-    private GoogleMap map;
+    private GoogleMap mMap;
     private CameraPosition mCameraPosition;
 
     private GoogleApiClient mGoogleApiClient; // Used for getting device location instead of Location Manager
@@ -64,7 +67,19 @@ public class MapsActivity extends AppCompatActivity implements
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
+    private static final int ADD_PARKING_SPOT_REQUEST_CODE = 103;
+
     Button addParkingSpotButton;
+    Button getDirectionsButton;
+
+    // Create a Marker object that will store vehicle location
+    private Marker mSavedLocation;
+    private boolean mRunOnce = false;
+
+    // Create SharedPreferences to store Marker location.
+    // Information gathered from: https://developer.android.com/training/basics/data-storage/shared-preferences.html
+    private SharedPreferences mSharedPref;
+    private SharedPreferences.Editor mEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,19 +101,24 @@ public class MapsActivity extends AppCompatActivity implements
         mGoogleApiClient.connect();
 
         addParkingSpotButton = (Button) findViewById(R.id.add_parking_spot_button);
+        getDirectionsButton = (Button) findViewById(R.id.get_directions_button);
+
+        // Initialize the SharedPreferences objects
+        mSharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        mEditor = mSharedPref.edit();
     }
 
     // Function called when map is ready after onCreate
     @Override
     public void onMapReady(GoogleMap inMap) {
-        this.map = inMap;
-        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        map.getUiSettings().setZoomGesturesEnabled(true);
+        mMap = inMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
         updateLocationUI();
         // Add sample marker
-        map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
-        map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             // Return null here, so that getInfoContents() is called next.
             public View getInfoWindow(Marker arg0) {
@@ -121,15 +141,35 @@ public class MapsActivity extends AppCompatActivity implements
 
         // Update map location
         if (mCameraPosition != null) {
-            map.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
         } else if (mCurrentLocation != null) { // cameraPosition null
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(mCurrentLocation.getLatitude(),
                             mCurrentLocation.getLongitude()), DEFAULT_ZOOM));
         } else { // cameraPosition and cameraLocation null
             Log.d(TAG, "Current location is null. Using defaults.");
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-            map.getUiSettings().setMyLocationButtonEnabled(false);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+
+        // Get saved marker location, if stored
+        // This should only run once.
+        if (mMap != null && !mRunOnce) {
+            String savedLoc = mSharedPref.getString(getString(R.string.saved_marker_location), "");
+            if (!savedLoc.equals("")) {
+                LatLng loc = new LatLng(Double.parseDouble(savedLoc.split(",")[0]),
+                        Double.parseDouble(savedLoc.split(",")[1]));
+
+                mSavedLocation = mMap.addMarker(new MarkerOptions()
+                        .position(loc)
+                        .title("Saved Parking Location")
+                        .snippet(loc.toString()));
+
+                addParkingSpotButton.setVisibility(View.INVISIBLE);
+                getDirectionsButton.setVisibility(View.VISIBLE);
+            }
+
+            mRunOnce = true;
         }
     }
 
@@ -155,8 +195,8 @@ public class MapsActivity extends AppCompatActivity implements
     // Saves an instance state when the app is paused
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (map != null) {
-            outState.putParcelable(KEY_CAMERA_POSITION, map.getCameraPosition());
+        if (mMap != null) {
+            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
             outState.putParcelable(KEY_LOCATION, mCurrentLocation);
             super.onSaveInstanceState(outState);
         }
@@ -255,21 +295,58 @@ public class MapsActivity extends AppCompatActivity implements
     // Updates UI map based on whether user gave location permission or not.
     @SuppressWarnings("MissingPermission")
     private void updateLocationUI() {
-        if (map == null) {
+        if (mMap == null) {
             return;
         }
         if (mLocationPermissionGranted) {
-            map.setMyLocationEnabled(true);
-            map.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
         } else {
-            map.setMyLocationEnabled(false);
-            map.getUiSettings().setMyLocationButtonEnabled(false);
+            mMap.setMyLocationEnabled(false);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             mCurrentLocation = null;
         }
     }
 
     public void onAddParkingSpotClick(View v) {
         Intent intent = new Intent(MapsActivity.this, ExpirationTimeActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, ADD_PARKING_SPOT_REQUEST_CODE);
+    }
+
+    public void onGetDirectionsClick(View v) {
+        addParkingSpotButton.setVisibility(View.VISIBLE);
+        getDirectionsButton.setVisibility(View.INVISIBLE);
+        mEditor.clear();
+        mEditor.commit();
+        mSavedLocation.remove();
+    }
+
+    // Get the result from adding a parking spot
+    // Ensures that a parking spot was successfully added to the map.
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+            case(ADD_PARKING_SPOT_REQUEST_CODE) : {
+                if (resultCode == RESULT_OK) {
+                    addParkingSpotButton.setVisibility(View.INVISIBLE);
+                    getDirectionsButton.setVisibility(View.VISIBLE);
+
+                    LatLng loc = new LatLng(mCurrentLocation.getLatitude(),
+                            mCurrentLocation.getLongitude());
+
+                    String locString = loc.latitude + "," + loc.longitude;
+
+                    mEditor.putString(getString(R.string.saved_marker_location), locString);
+                    mEditor.commit();
+
+                    mSavedLocation = mMap.addMarker(new MarkerOptions()
+                                .position(loc)
+                                .title("Saved Parking Location")
+                                .snippet(loc.toString()));
+                }
+            }
+        }
     }
 }
