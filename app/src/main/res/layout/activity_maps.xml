@@ -32,10 +32,33 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="90dip"
+        android:layout_marginBottom="120dip"
         android:id="@+id/get_directions_button"
         android:layout_gravity="center"
         android:onClick="onGetDirectionsClick"
+        android:visibility="invisible"/>
+
+    <Button
+        android:text="Clear Marker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="60dip"
+        android:id="@+id/clear_marker_button"
+        android:layout_gravity="center"
+        android:onClick="onClearMarkerClick"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/note_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_marginTop="5dp"
+        android:padding="21dp"
+        android:minHeight="100dp"
+        android:background="@android:drawable/alert_light_frame"
         android:visibility="invisible"/>
 
 </RelativeLayout>

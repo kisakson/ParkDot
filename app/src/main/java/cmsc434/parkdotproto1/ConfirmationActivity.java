@@ -16,6 +16,7 @@ import static android.view.View.INVISIBLE;
 
 public class ConfirmationActivity extends Activity {
     private TextView expirationTime, notifyTime, notifyType, notes;
+    public static final int MAP_ACTIVITY_REQUEST_CODE = 203;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class ConfirmationActivity extends Activity {
         notifyType = (TextView) findViewById(R.id.notify_type_text);
         notes = (TextView) findViewById(R.id.note_text);
 
+        //blah
         if (bundle.getString("notified").equals("no")) {
             notifyTime.setText("None");
 
@@ -69,7 +71,9 @@ public class ConfirmationActivity extends Activity {
     public void onConfirmationConfirmClick(View v) {
         Intent resultIntent = getIntent();
         resultIntent.putExtra("result", true);
+        resultIntent.putExtra("notes", notes.getText());
         setResult(Activity.RESULT_OK, resultIntent);
+
         finish();
     }
 }

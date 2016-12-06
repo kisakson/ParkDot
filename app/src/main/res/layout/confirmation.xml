@@ -85,20 +85,6 @@
         android:layout_marginTop="5dp"
         android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:text="No notes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/note_text"
-        android:layout_column="0"
-        android:layout_row="5"
-        android:layout_columnSpan="2"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:layout_marginTop="5dp"
-        android:padding="20dp"
-        android:minHeight="100dp"
-        android:background="@android:drawable/alert_light_frame" />
-
     <Button
         android:text="Confirm"
         android:layout_width="wrap_content"
@@ -110,5 +96,19 @@
         android:layout_columnSpan="2"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp" />
+
+    <TextView
+        android:text="No notes"
+        android:layout_width="match_parent"
+        android:layout_height="156dp"
+        android:id="@+id/note_text"
+        android:layout_column="0"
+        android:layout_row="5"
+        android:layout_columnSpan="2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_marginTop="5dp"
+        android:padding="21dp"
+        android:minHeight="100dp"
+        android:background="@android:drawable/alert_light_frame" />
 
 </GridLayout>
