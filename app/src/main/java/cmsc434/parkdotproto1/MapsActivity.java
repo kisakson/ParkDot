@@ -112,7 +112,7 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public void onMapReady(GoogleMap inMap) {
         mMap = inMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         updateLocationUI();
         // Add sample marker
