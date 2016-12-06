@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,9 +28,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import static cmsc434.parkdotproto1.ConfirmationActivity.MAP_ACTIVITY_REQUEST_CODE;
 
 
 /**
@@ -69,6 +74,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     private static final int ADD_PARKING_SPOT_REQUEST_CODE = 103;
 
+
     Button addParkingSpotButton;
     Button getDirectionsButton;
 
@@ -106,6 +112,7 @@ public class MapsActivity extends AppCompatActivity implements
         // Initialize the SharedPreferences objects
         mSharedPref = this.getPreferences(Context.MODE_PRIVATE);
         mEditor = mSharedPref.edit();
+
     }
 
     // Function called when map is ready after onCreate
@@ -124,6 +131,7 @@ public class MapsActivity extends AppCompatActivity implements
             public View getInfoWindow(Marker arg0) {
                 return null;
             }
+
             @Override
             public View getInfoContents(Marker marker) {
                 // Inflate the layouts for the info window, title and snippet.
@@ -327,8 +335,8 @@ public class MapsActivity extends AppCompatActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode) {
-            case(ADD_PARKING_SPOT_REQUEST_CODE) : {
+        switch (requestCode) {
+            case (ADD_PARKING_SPOT_REQUEST_CODE): {
                 if (resultCode == RESULT_OK) {
                     addParkingSpotButton.setVisibility(View.INVISIBLE);
                     getDirectionsButton.setVisibility(View.VISIBLE);
@@ -342,9 +350,18 @@ public class MapsActivity extends AppCompatActivity implements
                     mEditor.commit();
 
                     mSavedLocation = mMap.addMarker(new MarkerOptions()
-                                .position(loc)
-                                .title("Saved Parking Location")
-                                .snippet(loc.toString()));
+                            .position(loc)
+                            .title("Saved Parking Location")
+                            .snippet(loc.toString()));
+
+                    // Rayna's code
+                    Bundle bundle = data.getExtras();
+                    String notes = bundle.getString("notes");
+                    if (!notes.equals("No notes")) {
+                        TextView notes_view = (TextView) findViewById(R.id.note_text);
+                        notes_view.setText(notes);
+                        notes_view.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }

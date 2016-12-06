@@ -21,7 +21,10 @@
         android:ems="10"
         android:id="@+id/notes"
         android:layout_marginTop="20dp"
-        android:minHeight="170dp" />
+        android:minHeight="170dp"
+        android:maxLines="4"
+        android:maxLength="50"
+        />
 
     <Space
         android:layout_width="match_parent"
