@@ -1,5 +1,6 @@
 package cmsc434.parkdotproto1;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -9,17 +10,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -66,6 +64,8 @@ public class MapsActivity extends AppCompatActivity implements
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
+    Button addParkingSpotButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +84,8 @@ public class MapsActivity extends AppCompatActivity implements
         // Build the API client
         buildGoogleApiClient();
         mGoogleApiClient.connect();
+
+        addParkingSpotButton = (Button) findViewById(R.id.add_parking_spot_button);
     }
 
     // Function called when map is ready after onCreate
@@ -116,7 +118,7 @@ public class MapsActivity extends AppCompatActivity implements
                 return infoWindow;
             }
         });
-        
+
         // Update map location
         if (mCameraPosition != null) {
             map.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
@@ -264,5 +266,10 @@ public class MapsActivity extends AppCompatActivity implements
             map.getUiSettings().setMyLocationButtonEnabled(false);
             mCurrentLocation = null;
         }
+    }
+
+    public void onAddParkingSpotClick(View v) {
+        Intent intent = new Intent(MapsActivity.this, ExpirationTimeActivity.class);
+        startActivity(intent);
     }
 }

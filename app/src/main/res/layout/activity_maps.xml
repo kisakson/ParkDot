@@ -5,4 +5,16 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cmsc434.parkdotproto1.MapsActivity" />
+    tools:context="cmsc434.parkdotproto1.MapsActivity">
+
+    <Button
+        android:text="Add Parking Spot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/add_parking_spot_button"
+        android:layout_gravity="center"
+        android:onClick="onAddParkingSpotClick"
+        android:visibility="visible"/>
+
+</fragment>
