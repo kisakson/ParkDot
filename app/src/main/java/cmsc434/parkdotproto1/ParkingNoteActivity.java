@@ -16,7 +16,7 @@ public class ParkingNoteActivity extends Activity {
     private EditText notes;
     private NumberPicker notifyType;
 
-    final private int PARKING_NOTE_REQUEST_CODE = 2;
+    private static final int PARKING_NOTE_REQUEST_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

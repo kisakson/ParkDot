@@ -68,7 +68,7 @@ public class ConfirmationActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.M)
     public void onConfirmationConfirmClick(View v) {
         Intent resultIntent = getIntent();
-        resultIntent.putExtra("result", "All done!");
+        resultIntent.putExtra("result", true);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }

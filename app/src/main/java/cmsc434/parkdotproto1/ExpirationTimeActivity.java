@@ -20,7 +20,7 @@ public class ExpirationTimeActivity extends Activity {
     private NumberPicker notifyTime, notifyMinutes;
     private CheckBox notified;
 
-    final private int EXPIRATION_REQUEST_CODE = 1;
+    private static final int EXPIRATION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +73,7 @@ public class ExpirationTimeActivity extends Activity {
         switch(requestCode) {
             case(EXPIRATION_REQUEST_CODE) : {
                 if (resultCode == RESULT_OK) {
+                    setResult(resultCode, data);
                     finish();
                 }
             }

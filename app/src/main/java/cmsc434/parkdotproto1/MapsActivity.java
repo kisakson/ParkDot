@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -64,7 +65,13 @@ public class MapsActivity extends AppCompatActivity implements
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
+    private static final int ADD_PARKING_SPOT_REQUEST_CODE = 103;
+
     Button addParkingSpotButton;
+    Button getDirectionsButton;
+
+    // Create a Marker object that will store vehicle location
+    private Marker mSavedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,7 @@ public class MapsActivity extends AppCompatActivity implements
         mGoogleApiClient.connect();
 
         addParkingSpotButton = (Button) findViewById(R.id.add_parking_spot_button);
+        getDirectionsButton = (Button) findViewById(R.id.get_directions_button);
     }
 
     // Function called when map is ready after onCreate
@@ -270,6 +278,32 @@ public class MapsActivity extends AppCompatActivity implements
 
     public void onAddParkingSpotClick(View v) {
         Intent intent = new Intent(MapsActivity.this, ExpirationTimeActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, ADD_PARKING_SPOT_REQUEST_CODE);
+    }
+
+    public void onGetDirectionsClick(View v) {
+        addParkingSpotButton.setVisibility(View.VISIBLE);
+        getDirectionsButton.setVisibility(View.INVISIBLE);
+        mSavedLocation.remove();
+    }
+
+    // Get the result from adding a parking spot
+    // Ensures that a parking spot was successfully added to the map.
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+            case(ADD_PARKING_SPOT_REQUEST_CODE) : {
+                if (resultCode == RESULT_OK) {
+                    addParkingSpotButton.setVisibility(View.INVISIBLE);
+                    getDirectionsButton.setVisibility(View.VISIBLE);
+                    mSavedLocation = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(mCurrentLocation.getLatitude(),
+                                        mCurrentLocation.getLongitude()))
+                                .title("Saved Parking Location"));
+                }
+            }
+        }
     }
 }
