@@ -31,6 +31,7 @@ public class ParkingNoteActivity extends Activity {
         notes = (EditText) findViewById(R.id.notes);
     }
 
+    // blah
     public void onParkingNoteNextButtonClick(View v) {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();

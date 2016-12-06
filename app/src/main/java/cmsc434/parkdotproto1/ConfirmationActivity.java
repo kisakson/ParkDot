@@ -40,6 +40,7 @@ public class ConfirmationActivity extends Activity {
         notifyType = (TextView) findViewById(R.id.notify_type_text);
         notes = (TextView) findViewById(R.id.note_text);
 
+        //blah
         if (bundle.getString("notified").equals("no")) {
             notifyTime.setText("None");
 

@@ -354,7 +354,7 @@ public class MapsActivity extends AppCompatActivity implements
                             .title("Saved Parking Location")
                             .snippet(loc.toString()));
 
-                    // Rayna's code
+                    // Rayna's code here
                     Bundle bundle = data.getExtras();
                     String notes = bundle.getString("notes");
                     if (!notes.equals("No notes")) {

@@ -107,7 +107,7 @@
         android:layout_columnSpan="2"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:layout_marginTop="5dp"
-        android:padding="20dp"
+        android:padding="21dp"
         android:minHeight="100dp"
         android:background="@android:drawable/alert_light_frame" />
 

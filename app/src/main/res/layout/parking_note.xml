@@ -22,7 +22,7 @@
         android:id="@+id/notes"
         android:layout_marginTop="20dp"
         android:minHeight="170dp"
-        android:maxLines="4"
+        android:maxLines="5"
         android:maxLength="50"
         />
 
