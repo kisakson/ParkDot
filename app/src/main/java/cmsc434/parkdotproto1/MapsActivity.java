@@ -175,7 +175,8 @@ public class MapsActivity extends AppCompatActivity implements
                 mSavedLocation = mMap.addMarker(new MarkerOptions()
                         .position(loc)
                         .title("Saved Parking Location")
-                        .snippet(loc.toString()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.car)));
+                        .snippet(loc.toString())
+                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.car)));
 
                 addParkingSpotButton.setVisibility(View.INVISIBLE);
                 getDirectionsButton.setVisibility(View.VISIBLE);
@@ -403,7 +404,8 @@ public class MapsActivity extends AppCompatActivity implements
                     mSavedLocation = mMap.addMarker(new MarkerOptions()
                             .position(loc)
                             .title("Saved Parking Location")
-                            .snippet(loc.toString()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.car)));
+                            .snippet(loc.toString())
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.car)));
 
                     // Rayna's code here
                     Bundle bundle = data.getExtras();
