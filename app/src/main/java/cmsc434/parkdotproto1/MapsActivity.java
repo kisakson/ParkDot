@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,12 +50,12 @@ public class MapsActivity extends AppCompatActivity implements
         https://github.com/googlemaps/android-samples/blob/master/tutorials/CurrentPlaceDetailsOnMap/app/src/main/java/com/example/currentplacedetailsonmap/MapsActivityCurrentPlaces.java
         https://github.com/googlemaps/android-samples/blob/master/ApiDemos/app/src/main/java/com/example/mapdemo/BasicMapDemoActivity.java
      */
-    private static final String TAG = MapsActivity.class.getSimpleName();
-    private GoogleMap mMap;
-    private CameraPosition mCameraPosition;
+    private static final String TAG = MapsActivity.class.getSimpleName(); // Used for error logs
+    private GoogleMap mMap; // Map object
+    private CameraPosition mCameraPosition; // Camera position
 
     private GoogleApiClient mGoogleApiClient; // Used for getting device location instead of Location Manager
-    private LocationRequest mLocationRequest;
+    private LocationRequest mLocationRequest; // Used for knowing when to get new location update
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
@@ -66,14 +67,13 @@ public class MapsActivity extends AppCompatActivity implements
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
-    private Location mCurrentLocation;
+    private Location mCurrentLocation; // Current location values
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
     private static final int ADD_PARKING_SPOT_REQUEST_CODE = 103;
 
-
-    Button addParkingSpotButton;
+    Button addParkingSpotButton; // Layout buttons
     Button getDirectionsButton;
     Button clearMarkerButton;
 
@@ -123,6 +123,19 @@ public class MapsActivity extends AppCompatActivity implements
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         updateLocationUI();
 
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            // Return null here, so that getInfoContents() is called next.
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                return null;
+            }
+        });
+
         // Update map location
         if (mCameraPosition != null) {
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
@@ -150,7 +163,8 @@ public class MapsActivity extends AppCompatActivity implements
                         .position(loc)
                         .title("Saved Parking Location")
                         .snippet(loc.toString())
-                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.car)));
+                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.car))
+                        .draggable(true));
 
                 addParkingSpotButton.setVisibility(View.INVISIBLE);
                 getDirectionsButton.setVisibility(View.VISIBLE);
@@ -167,6 +181,33 @@ public class MapsActivity extends AppCompatActivity implements
 
             mRunOnce = true;
         }
+
+        // Set an onMarkerDragListener for when the user wants to drag the Marker.
+        // You must long press the Marker in order to drag it
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                // Do nothing
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                // Do nothing
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                // Set the snippet to show the new coordinates
+                // Save the new location to the Shared Preferences.
+                LatLng loc = new LatLng(mCurrentLocation.getLatitude(),
+                        mCurrentLocation.getLongitude());
+
+                String locString = loc.latitude + "," + loc.longitude;
+                mSavedLocation.setSnippet(loc.toString());
+                mEditor.putString(getString(R.string.saved_marker_location), locString);
+                mEditor.commit();
+            }
+        });
     }
 
     // Get device lodation after app is resumed
