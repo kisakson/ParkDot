@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -164,7 +163,7 @@ public class MapsActivity extends AppCompatActivity implements
                         Double.parseDouble(savedLoc.split(",")[1]));
 
 
-                Drawable carDrawable = getResources().getDrawable(R.drawable.car_black_big);
+                Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
                 BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
 
                 mSavedLocation = mMap.addMarker(new MarkerOptions()
@@ -437,7 +436,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                     mEditor.putString(getString(R.string.saved_marker_location), locString);
 
-                    Drawable carDrawable = getResources().getDrawable(R.drawable.car_black_big);
+                    Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
                     BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
 
                     mSavedLocation = mMap.addMarker(new MarkerOptions()
