@@ -2,7 +2,9 @@ package cmsc434.parkdotproto1;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -28,19 +30,37 @@ public class ConfirmationActivity extends Activity {
 
         expirationTime = (TextView) findViewById(R.id.exp_time_text);
         int expirationHour = bundle.getInt("expirationHour");
+        int expirationMinute = bundle.getInt("expirationMinute");
         String meridiem = "AM";
+
         if (expirationHour > 12) {
             expirationHour = expirationHour - 12;
             meridiem = "PM";
         }
-        int expirationMinute = bundle.getInt("expirationMinute");
-        expirationTime.setText(Integer.toString(expirationHour) + ":" + Integer.toString(expirationMinute) + " " + meridiem);
+        String hour = Integer.toString(expirationHour);
+        String minute = Integer.toString(expirationMinute);
+
+        // save expiration information for pop-up notification
+        SharedPreferences sharedpreferences = this.getSharedPreferences("expTime", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString("expHour", hour);
+        editor.putString("expMinute", minute);
+        editor.putString("meridiem", meridiem);
+
+        // format time
+        if (expirationHour < 10) {
+            hour = "0" + hour;
+        }
+        if (expirationMinute < 10) {
+            minute = "0" + minute;
+        }
+        expirationTime.setText(hour + ":" + minute + " " + meridiem);
 
         notifyTime = (TextView) findViewById(R.id.notify_time_text);
         notifyType = (TextView) findViewById(R.id.notify_type_text);
         notes = (TextView) findViewById(R.id.note_text);
 
-        //blah
+        // skip notification section if user does not want to be notified
         if (bundle.getString("notified").equals("no")) {
             notifyTime.setText("None");
 
@@ -57,14 +77,19 @@ public class ConfirmationActivity extends Activity {
 
             if (bundle.getInt("notifyType") == 0) {
                 notifyType.setText("IN APP ONLY");
+                editor.putLong("expMili", 0L);
             } else {
                 notifyType.setText("IN APP and with PUSH NOTIFICATION");
+                long expirationMili = notifyMinute * 60000L;
+                editor.putLong("expMili", expirationMili);
             }
 
             if (!bundle.getString("notes").isEmpty()) {
                 notes.setText(bundle.getString("notes"));
             }
         }
+
+        editor.commit();
     }
 
     @TargetApi(Build.VERSION_CODES.M)

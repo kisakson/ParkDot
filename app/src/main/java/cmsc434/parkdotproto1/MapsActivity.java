@@ -1,5 +1,8 @@
 package cmsc434.parkdotproto1;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,14 +15,18 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -38,6 +45,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -89,6 +99,11 @@ public class MapsActivity extends AppCompatActivity implements
     // Information gathered from: https://developer.android.com/training/basics/data-storage/shared-preferences.html
     private SharedPreferences mSharedPref;
     private SharedPreferences.Editor mEditor;
+    private SharedPreferences expTime;
+
+    // alarm for push notification
+    // https://nnish.com/2014/12/16/scheduled-notifications-in-android-using-alarm-manager/
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +131,7 @@ public class MapsActivity extends AppCompatActivity implements
         // Initialize the SharedPreferences objects
         mSharedPref = this.getPreferences(Context.MODE_PRIVATE);
         mEditor = mSharedPref.edit();
-
+        expTime = this.getSharedPreferences("expTime", Context.MODE_PRIVATE);
     }
 
     // Function called when map is ready after onCreate
@@ -153,9 +168,77 @@ public class MapsActivity extends AppCompatActivity implements
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
+        // notification pop-up indicating time until expiration
+        if (mMap != null && mRunOnce) {
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+            ViewGroup mainView = (ViewGroup)findViewById(R.id.activity_maps);
+            LayoutInflater inflater = this.getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.notification_popup, null);
+
+            String expHour = expTime.getString("expHour", "None");
+            String expMinute = expTime.getString("expMinute", "None");
+            String meridiem = expTime.getString("meridiem", "None");
+
+            if (!expHour.equals("None") && !expMinute.equals("None") && !meridiem.equals("None")) {
+                TextView expTimeLeft = (TextView) dialogView.findViewById(R.id.exp_time_left);
+
+                // get expiration time
+                int hour = Integer.parseInt(expHour);
+                int min = Integer.parseInt(expMinute);
+                if (meridiem.equals("PM")) {
+                    hour += 12;
+                }
+
+                Log.d("Exp Time", hour + ":" + min);
+
+                // get current time
+                Calendar c = Calendar.getInstance();
+
+                int curHour = c.get(Calendar.HOUR_OF_DAY);
+                int curMin = c.get(Calendar.MINUTE);
+
+                Log.d("Curr Time", curHour + ":" + curMin);
+
+                int expTime = hour * 60 + min;
+                int curTime = curHour * 60 + curMin;
+
+                // compute time difference
+                int diffTime = expTime - curTime;
+                int hourLeft = diffTime / 60;
+                int minLeft = diffTime - hourLeft * 60;
+
+                String hourLeftStr = String.valueOf(hourLeft);
+                if (hourLeft < 10) {
+                    hourLeftStr = "0" + hourLeftStr;
+                }
+                String minLeftStr = String.valueOf(minLeft);
+                if (minLeft < 10) {
+                    minLeftStr = "0" + minLeftStr;
+                }
+
+                if (diffTime <= 0) {
+                    expTimeLeft.setText("Parking has expired!");
+                } else {
+                    expTimeLeft.setText(hourLeftStr + ":" + minLeftStr + " left until parking expires");
+                }
+
+                builder.setView(dialogView)
+                        // Add action buttons
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+
+                android.app.AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        }
+
         // Get saved marker location, if stored
         // This should only run once.
         if (mMap != null && !mRunOnce) {
+            // add notes section top left corner of map
             String savedLoc = mSharedPref.getString(getString(R.string.saved_marker_location), "");
             String savedNotes = mSharedPref.getString(getString(R.string.saved_marker_notes), "No notes");
 
@@ -185,6 +268,13 @@ public class MapsActivity extends AppCompatActivity implements
                 notes_view.setVisibility(View.VISIBLE);
 
                 mEditor.putString(getString(R.string.saved_marker_notes), savedNotes);
+            }
+
+            // set notification
+            long expMili = expTime.getLong("expMili", 0L);
+
+            if (expMili > 0) {
+                scheduleNotification(getNotification("Go get your car!"), expMili);
             }
 
             mRunOnce = true;
@@ -461,5 +551,25 @@ public class MapsActivity extends AppCompatActivity implements
                 }
             }
         }
+    }
+
+    private void scheduleNotification(Notification notification, long delay) {
+
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    }
+
+    private Notification getNotification(String content) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Scheduled Notification");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.car_dark_purple);
+        return builder.build();
     }
 }
