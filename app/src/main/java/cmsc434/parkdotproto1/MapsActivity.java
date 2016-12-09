@@ -164,7 +164,7 @@ public class MapsActivity extends AppCompatActivity implements
                         Double.parseDouble(savedLoc.split(",")[1]));
 
 
-                Drawable carDrawable = getResources().getDrawable(R.drawable.ic_purple_car);
+                Drawable carDrawable = getResources().getDrawable(R.drawable.car_black_big);
                 BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
 
                 mSavedLocation = mMap.addMarker(new MarkerOptions()
@@ -437,11 +437,14 @@ public class MapsActivity extends AppCompatActivity implements
 
                     mEditor.putString(getString(R.string.saved_marker_location), locString);
 
+                    Drawable carDrawable = getResources().getDrawable(R.drawable.car_black_big);
+                    BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
+
                     mSavedLocation = mMap.addMarker(new MarkerOptions()
                             .position(loc)
                             .title("Saved Parking Location")
                             .snippet(loc.toString())
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.car))
+                            .icon(markerIcon)
                             .draggable(true));
 
                     // Rayna's code here
