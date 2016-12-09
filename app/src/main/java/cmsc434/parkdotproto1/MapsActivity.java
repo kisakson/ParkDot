@@ -568,7 +568,7 @@ public class MapsActivity extends AppCompatActivity implements
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentTitle("Scheduled Notification");
         builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.car_dark_purple);
+        builder.setSmallIcon(R.drawable.orange_carpng);
         return builder.build();
     }
 }
