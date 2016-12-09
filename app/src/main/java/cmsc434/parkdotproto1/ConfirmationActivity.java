@@ -2,11 +2,16 @@ package cmsc434.parkdotproto1;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,6 +24,7 @@ import static android.view.View.INVISIBLE;
 public class ConfirmationActivity extends Activity {
     private TextView expirationTime, notifyTime, notifyType, notes;
     public static final int MAP_ACTIVITY_REQUEST_CODE = 203;
+    private long expMili;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +38,7 @@ public class ConfirmationActivity extends Activity {
         int expirationHour = bundle.getInt("expirationHour");
         int expirationMinute = bundle.getInt("expirationMinute");
         String meridiem = "AM";
+        expMili = (expirationHour * 60 + expirationMinute) * 60000L;
 
         if (expirationHour > 12) {
             expirationHour = expirationHour - 12;
@@ -77,11 +84,11 @@ public class ConfirmationActivity extends Activity {
 
             if (bundle.getInt("notifyType") == 0) {
                 notifyType.setText("IN APP ONLY");
-                editor.putLong("expMili", 0L);
             } else {
                 notifyType.setText("IN APP and with PUSH NOTIFICATION");
-                long expirationMili = notifyMinute * 60000L;
-                editor.putLong("expMili", expirationMili);
+                long notifyMili = notifyMinute * 60000L;
+                long timeMili = expMili - notifyMili;
+                scheduleNotification(getNotification("Go get your car!"), timeMili);
             }
 
             if (!bundle.getString("notes").isEmpty()) {
@@ -100,5 +107,24 @@ public class ConfirmationActivity extends Activity {
         setResult(Activity.RESULT_OK, resultIntent);
 
         finish();
+    }
+
+    private void scheduleNotification(Notification notification, long notifyTime) {
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Log.d("NotificationSchedule", String.valueOf(notifyTime));
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, notifyTime, pendingIntent);
+    }
+
+    private Notification getNotification(String content) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Parking Alert");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.orange_carpng);
+        return builder.build();
     }
 }

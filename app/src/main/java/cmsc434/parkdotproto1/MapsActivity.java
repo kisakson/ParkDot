@@ -168,7 +168,7 @@ public class MapsActivity extends AppCompatActivity implements
         }
 
         // notification pop-up indicating time until expiration
-        if (mMap != null && mRunOnce) {
+        if (mMap != null && mRunOnce && addParkingSpotButton.getVisibility() == View.INVISIBLE) {
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
             ViewGroup mainView = (ViewGroup)findViewById(R.id.activity_maps);
             LayoutInflater inflater = this.getLayoutInflater();
@@ -267,13 +267,6 @@ public class MapsActivity extends AppCompatActivity implements
                 notes_view.setVisibility(View.VISIBLE);
 
                 mEditor.putString(getString(R.string.saved_marker_notes), savedNotes);
-            }
-
-            // set notification
-            long expMili = expTime.getLong("expMili", 0L);
-
-            if (expMili > 0) {
-                scheduleNotification(getNotification("Go get your car!"), expMili);
             }
 
             mRunOnce = true;
@@ -550,25 +543,5 @@ public class MapsActivity extends AppCompatActivity implements
                 }
             }
         }
-    }
-
-    private void scheduleNotification(Notification notification, long delay) {
-
-        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    }
-
-    private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Scheduled Notification");
-        builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.orange_carpng);
-        return builder.build();
     }
 }
