@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 /**
@@ -81,6 +82,8 @@ public class MapsActivity extends AppCompatActivity implements
     private static final String KEY_LOCATION = "location";
 
     private static final int ADD_PARKING_SPOT_REQUEST_CODE = 103;
+
+    private static DecimalFormat mDF7 = new DecimalFormat(".#######");  // Format to 7 decimal places
 
     Button addParkingSpotButton; // Layout buttons
     Button getDirectionsButton;
@@ -231,6 +234,7 @@ public class MapsActivity extends AppCompatActivity implements
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
+                                // Do nothing
                             }
                         });
 
@@ -254,10 +258,13 @@ public class MapsActivity extends AppCompatActivity implements
                 Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
                 BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
 
+                // Because marker location is stored with more precision, format decimal places
+                String locString = "lat/lng: (" + mDF7.format(loc.latitude) + "," + mDF7.format(loc.longitude) + ")";
+
                 mSavedLocation = mMap.addMarker(new MarkerOptions()
                         .position(loc)
                         .title("Saved Parking Location")
-                        .snippet(loc.toString())
+                        .snippet(locString)
                         .icon(markerIcon)
                         .draggable(true));
 
@@ -266,6 +273,7 @@ public class MapsActivity extends AppCompatActivity implements
                 clearMarkerButton.setVisibility(View.VISIBLE);
             }
 
+            // Grab the stored notes and show them with the correct text
             if (!savedNotes.equals("No notes")) {
                 TextView notes_view = (TextView) findViewById(R.id.note_text);
                 notes_view.setText(savedNotes);
@@ -280,6 +288,8 @@ public class MapsActivity extends AppCompatActivity implements
         // Set an onMarkerDragListener for when the user wants to drag the Marker.
         // You must long press the Marker in order to drag it
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+
+
             @Override
             public void onMarkerDragStart(Marker marker) {
                 // Show the marker snippet when the user wants to drag the marker
@@ -290,8 +300,8 @@ public class MapsActivity extends AppCompatActivity implements
             public void onMarkerDrag(Marker marker) {
                 // Update the marker snippet as the user drags the marker
                 LatLng loc = marker.getPosition();
-                marker.setSnippet(loc.toString());
-                marker.showInfoWindow();
+                marker.setSnippet("lat/lng: (" + mDF7.format(loc.latitude) + "," + mDF7.format(loc.longitude) + ")");
+                marker.showInfoWindow();    // Update the InfowWindow
             }
 
             @Override
@@ -300,8 +310,11 @@ public class MapsActivity extends AppCompatActivity implements
                 // Save the new location to the Shared Preferences.
                 LatLng loc = marker.getPosition();
 
+                // Store more precise location coordinates in SharedPreferences,
                 String locString = loc.latitude + "," + loc.longitude;
-                marker.setSnippet(loc.toString());
+
+                // Show user DecimalFormated coordinates
+                marker.setSnippet("lat/lng: (" + mDF7.format(loc.latitude) + "," + mDF7.format(loc.longitude) + ")");
                 mEditor.putString(getString(R.string.saved_marker_location), locString);
                 mEditor.apply();
                 Toast.makeText(MapsActivity.this, "Parking location updated", Toast.LENGTH_SHORT).show();
@@ -539,6 +552,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                     String locString = loc.latitude + "," + loc.longitude;
 
+                    // Coordinates from mCurrentLocation show up to 7 decimal places.
                     mEditor.putString(getString(R.string.saved_marker_location), locString);
 
                     Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
