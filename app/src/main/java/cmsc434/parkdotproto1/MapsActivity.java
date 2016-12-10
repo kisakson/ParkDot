@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -187,25 +188,29 @@ public class MapsActivity extends AppCompatActivity implements
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
-                // Do nothing
+                // Show the marker snippet when the user wants to drag the marker
+                marker.showInfoWindow();
             }
 
             @Override
             public void onMarkerDrag(Marker marker) {
-                // Do nothing
+                // Update the marker snippet as the user drags the marker
+                LatLng loc = marker.getPosition();
+                marker.setSnippet(loc.toString());
+                marker.showInfoWindow();
             }
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
                 // Set the snippet to show the new coordinates
                 // Save the new location to the Shared Preferences.
-                LatLng loc = new LatLng(mCurrentLocation.getLatitude(),
-                        mCurrentLocation.getLongitude());
+                LatLng loc = marker.getPosition();
 
                 String locString = loc.latitude + "," + loc.longitude;
-                mSavedLocation.setSnippet(loc.toString());
+                marker.setSnippet(loc.toString());
                 mEditor.putString(getString(R.string.saved_marker_location), locString);
                 mEditor.commit();
+                Toast.makeText(MapsActivity.this, "Parking location updated", Toast.LENGTH_SHORT).show();
             }
         });
     }
