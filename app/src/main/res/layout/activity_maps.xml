@@ -41,7 +41,7 @@
         android:layout_gravity="center"
         android:onClick="onGetDirectionsClick"
         android:visibility="invisible"
-        android:background="@color/colorAccentDark"
+        android:background="@color/colorPrimaryDark"
         android:padding="10dp"/>
 
     <Button
