@@ -1,4 +1,4 @@
-package cmsc434.parkdotproto1;
+package cmsc434.parkdot;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
