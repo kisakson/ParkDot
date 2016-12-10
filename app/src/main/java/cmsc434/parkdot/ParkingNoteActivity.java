@@ -25,7 +25,7 @@ public class ParkingNoteActivity extends Activity {
         notifyType = (NumberPicker) findViewById(R.id.notify_type);
         notifyType.setMinValue(0);
         notifyType.setMaxValue(1);
-        notifyType.setDisplayedValues( new String[] { "IN APP ONLY" , "IN APP AND WITH PUSH NOTIFICATION" } );
+        notifyType.setDisplayedValues( new String[] { "NO" , "YES" } );
 
         notes = (EditText) findViewById(R.id.notes);
     }
