@@ -93,7 +93,7 @@ public class MapsActivity extends AppCompatActivity implements
     private Marker mSavedLocation;
     private boolean mRunOnce = false;
 
-    // Create SharedPreferences to store Marker location.
+    // Create SharedPreferences to store Marker location as well as other information.
     // Information gathered from: https://developer.android.com/training/basics/data-storage/shared-preferences.html
     private SharedPreferences mSharedPref;
     private SharedPreferences.Editor mEditor;
@@ -268,6 +268,7 @@ public class MapsActivity extends AppCompatActivity implements
                         .icon(markerIcon)
                         .draggable(true));
 
+                // Change the visibility of the corresponding buttons
                 addParkingSpotButton.setVisibility(View.INVISIBLE);
                 getDirectionsButton.setVisibility(View.VISIBLE);
                 clearMarkerButton.setVisibility(View.VISIBLE);
@@ -458,6 +459,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     public void onAddParkingSpotClick(View v) {
+        // Start a new Activity and have it return a result that is grabbed here
         Intent intent = new Intent(MapsActivity.this, ExpirationTimeActivity.class);
         startActivityForResult(intent, ADD_PARKING_SPOT_REQUEST_CODE);
     }
@@ -484,11 +486,15 @@ public class MapsActivity extends AppCompatActivity implements
                 .setCancelable(true)
                 .setIcon(android.R.drawable.ic_dialog_alert);
 
+        // Create and define what should happen when the user presses the positive choice button
         builder.setPositiveButton(R.string.clear_okay, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                // Change the visibilty of the buttons
                 addParkingSpotButton.setVisibility(View.VISIBLE);
                 getDirectionsButton.setVisibility(View.INVISIBLE);
                 clearMarkerButton.setVisibility(View.INVISIBLE);
+
+                // Clear the information about the markers
                 mEditor.clear();
                 mEditor.apply();
                 mSavedLocation.remove();
@@ -504,6 +510,7 @@ public class MapsActivity extends AppCompatActivity implements
                 alarmManager.cancel(removePendingIntent);
                 removePendingIntent.cancel();
 
+                // Clear the notes and set the TextView to invisible
                 TextView notes_view = (TextView) findViewById(R.id.note_text);
                 notes_view.setText("");
                 notes_view.setVisibility(View.INVISIBLE);
@@ -543,13 +550,16 @@ public class MapsActivity extends AppCompatActivity implements
         switch (requestCode) {
             case (ADD_PARKING_SPOT_REQUEST_CODE): {
                 if (resultCode == RESULT_OK) {
+                    // Change the visiblity of the buttons
                     addParkingSpotButton.setVisibility(View.INVISIBLE);
                     getDirectionsButton.setVisibility(View.VISIBLE);
                     clearMarkerButton.setVisibility(View.VISIBLE);
 
+                    // Get the current location of the person
                     LatLng loc = new LatLng(mCurrentLocation.getLatitude(),
                             mCurrentLocation.getLongitude());
 
+                    // If enabled, set the coordinates to the same place as in the video
                     if (ConfirmationActivity.ENABLE_DEVELOPER_TESTING) {
                         loc = new LatLng(ConfirmationActivity.TESTING_LATITUDE,
                                 ConfirmationActivity.TESTING_LONGITUDE);
@@ -560,6 +570,7 @@ public class MapsActivity extends AppCompatActivity implements
                     // Coordinates from mCurrentLocation show up to 7 decimal places.
                     mEditor.putString(getString(R.string.saved_marker_location), locString);
 
+                    // Change the marker image to a custom image
                     Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
                     BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
 
@@ -570,7 +581,7 @@ public class MapsActivity extends AppCompatActivity implements
                             .icon(markerIcon)
                             .draggable(true));
 
-                    // Rayna's code here
+                    // If applicable, make a visible TextView that displays the user's notes.
                     Bundle bundle = data.getExtras();
                     String notes = bundle.getString("notes");
                     if (!notes.equals("No notes")) {
