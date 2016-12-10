@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,10 +28,12 @@ public class ConfirmationActivity extends Activity {
     private TextView expirationTime, notifyTime, notifyType, notes;
     private long expMili;
 
-    public static final boolean ENABLE_TESTING = false;
-    private static final int TESTING_EXPIRATION_HOUR = 16;  // in 24h
-    private static final int TESTING_EXPIRATION_MINUTE = 49;
-    private static final int TESTING_NOTIF_MINUTE = 1;
+    public static final boolean ENABLE_DEVELOPER_TESTING = true;
+    public static final double TESTING_LATITUDE = 38.9934527;
+    public static final double TESTING_LONGITUDE = -76.9357481;
+    private static final int TESTING_EXPIRATION_HOUR = 19;  // in 24h
+    private static final int TESTING_EXPIRATION_MINUTE = 00;
+    private static final int TESTING_NOTIF_MINUTE = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class ConfirmationActivity extends Activity {
         Calendar c = new GregorianCalendar();
         c.set(c.get(Calendar.YEAR), c.get(c.MONTH), c.get(c.DATE), expirationHour, expirationMinute, 0);
 
-        if (ENABLE_TESTING) {
+        if (ENABLE_DEVELOPER_TESTING) {
             c.set(c.get(Calendar.YEAR),
                     c.get(c.MONTH),
                     c.get(c.DATE),
@@ -113,11 +114,13 @@ public class ConfirmationActivity extends Activity {
             } else {
                 notifyType.setText("IN APP and with PUSH NOTIFICATION");
                 long notifyMili = notifyMinute * 60 * 1000;
-                long timeMili = expMili - notifyMili;
-                if (ENABLE_TESTING) {
+
+                if (ENABLE_DEVELOPER_TESTING) {
                     notifyMili = TESTING_NOTIF_MINUTE * 60 * 1000;
-                    timeMili = expMili - notifyMili;
                 }
+
+                long timeMili = expMili - notifyMili;
+
 
                 if (!bundle.getString("notes").isEmpty()) {
                     notifText = bundle.getString("notes");

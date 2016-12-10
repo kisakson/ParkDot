@@ -550,6 +550,11 @@ public class MapsActivity extends AppCompatActivity implements
                     LatLng loc = new LatLng(mCurrentLocation.getLatitude(),
                             mCurrentLocation.getLongitude());
 
+                    if (ConfirmationActivity.ENABLE_DEVELOPER_TESTING) {
+                        loc = new LatLng(ConfirmationActivity.TESTING_LATITUDE,
+                                ConfirmationActivity.TESTING_LONGITUDE);
+                    }
+
                     String locString = loc.latitude + "," + loc.longitude;
 
                     // Coordinates from mCurrentLocation show up to 7 decimal places.
