@@ -29,7 +29,7 @@ public class ConfirmationActivity extends Activity {
     private TextView expirationTime, notifyTime, notifyType, notes;
     private long expMili;
 
-    public static final boolean ENABLE_TESTING = true;
+    public static final boolean ENABLE_TESTING = false;
     private static final int TESTING_EXPIRATION_HOUR = 16;  // in 24h
     private static final int TESTING_EXPIRATION_MINUTE = 49;
     private static final int TESTING_NOTIF_MINUTE = 1;
