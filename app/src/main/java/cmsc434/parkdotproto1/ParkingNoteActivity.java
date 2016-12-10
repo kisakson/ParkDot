@@ -31,7 +31,10 @@ public class ParkingNoteActivity extends Activity {
         notes = (EditText) findViewById(R.id.notes);
     }
 
-    // blah
+    /**
+     * Send notification and notes information to confirmation page
+     * @param v
+     */
     public void onParkingNoteNextButtonClick(View v) {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -44,6 +47,12 @@ public class ParkingNoteActivity extends Activity {
         startActivityForResult(intent2, PARKING_NOTE_REQUEST_CODE);
     }
 
+    /**
+     * Send request code
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

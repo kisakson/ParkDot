@@ -44,20 +44,26 @@ public class ExpirationTimeActivity extends Activity {
         notifyTime.setDisplayedValues( new String[] { "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60" } );
         notifyTime.setValue(5);
 
+        /* Limit notification time to minutes */
         notifyMinutes.setMinValue(0);
         notifyMinutes.setMaxValue(0);
         notifyMinutes.setDisplayedValues( new String[] { "minutes" } );
     }
 
+    /**
+     * Save expiration and notification information
+     * @param v
+     */
     @TargetApi(Build.VERSION_CODES.M)
     public void onExpirationTimeNextButtonClick(View v) {
         Intent intent;
-        if (notified.isChecked()) {
+        if (notified.isChecked()) { // skip to confirmation if user does not want to be notified
             intent = new Intent(getApplicationContext(), ConfirmationActivity.class);
         } else {
             intent = new Intent(getApplicationContext(), ParkingNoteActivity.class);
         }
 
+        // save expiration
         Bundle bundle = new Bundle();
         bundle.putInt("expirationHour", expirationTime.getHour());
         bundle.putInt("expirationMinute", expirationTime.getMinute());
@@ -72,6 +78,12 @@ public class ExpirationTimeActivity extends Activity {
         startActivityForResult(intent, EXPIRATION_REQUEST_CODE);
     }
 
+    /**
+     * Send request code
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
