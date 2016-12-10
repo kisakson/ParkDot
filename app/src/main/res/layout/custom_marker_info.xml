@@ -9,12 +9,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:textColor="#ff000000"
+        android:textColor="#339ABF"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/custom_marker_snippet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#ff7f7f7f" />
+        android:textColor="#F26C25" />
 </LinearLayout>

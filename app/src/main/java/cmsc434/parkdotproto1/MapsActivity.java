@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -173,6 +172,7 @@ public class MapsActivity extends AppCompatActivity implements
         }
 
         // notification pop-up indicating time until expiration
+        // occurs every time you open the app
         if (mMap != null && addParkingSpotButton.getVisibility() == View.INVISIBLE) {
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
             ViewGroup mainView = (ViewGroup)findViewById(R.id.activity_maps);
@@ -494,6 +494,8 @@ public class MapsActivity extends AppCompatActivity implements
                 TextView notes_view = (TextView) findViewById(R.id.note_text);
                 notes_view.setText("");
                 notes_view.setVisibility(View.INVISIBLE);
+
+                Toast.makeText(MapsActivity.this, "Parking location removed", Toast.LENGTH_SHORT).show();
             }
         });
 
