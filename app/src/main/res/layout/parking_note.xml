@@ -46,11 +46,13 @@
 
     <Button
         android:text="Next"
+        android:textColor="#fff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/parking_note_next_button"
         android:layout_gravity="center"
         android:onClick="onParkingNoteNextButtonClick"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="30dp"
+        android:background="@color/colorAccentDark"/>
 
 </LinearLayout>

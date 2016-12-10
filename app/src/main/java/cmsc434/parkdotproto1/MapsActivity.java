@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -160,11 +163,15 @@ public class MapsActivity extends AppCompatActivity implements
                 LatLng loc = new LatLng(Double.parseDouble(savedLoc.split(",")[0]),
                         Double.parseDouble(savedLoc.split(",")[1]));
 
+
+                Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
+                BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
+
                 mSavedLocation = mMap.addMarker(new MarkerOptions()
                         .position(loc)
                         .title("Saved Parking Location")
                         .snippet(loc.toString())
-                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.car))
+                        .icon(markerIcon)
                         .draggable(true));
 
                 addParkingSpotButton.setVisibility(View.INVISIBLE);
@@ -402,6 +409,18 @@ public class MapsActivity extends AppCompatActivity implements
         clearAlert.show();
     }
 
+
+    //taken from stackoverflow: http://stackoverflow.com/questions/18053156/set-image-from-drawable-as-marker-in-google-map-version-2
+    // This allows us to use a vector as the marker icon
+    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
     // Get the result from adding a parking spot
     // Ensures that a parking spot was successfully added to the map.
     @Override
@@ -422,11 +441,14 @@ public class MapsActivity extends AppCompatActivity implements
 
                     mEditor.putString(getString(R.string.saved_marker_location), locString);
 
+                    Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
+                    BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
+
                     mSavedLocation = mMap.addMarker(new MarkerOptions()
                             .position(loc)
                             .title("Saved Parking Location")
                             .snippet(loc.toString())
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.car))
+                            .icon(markerIcon)
                             .draggable(true));
 
                     // Rayna's code here
