@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,6 +44,9 @@ public class ConfirmationActivity extends Activity {
 
         Calendar c = new GregorianCalendar();
         c.set(c.get(Calendar.YEAR), c.get(c.MONTH), c.get(c.DATE), expirationHour, expirationMinute, 0);
+
+        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS a");
+        Log.d("NotificationExpir", f.format(c.getTime()));
 
         expMili = c.getTimeInMillis();
 
@@ -92,7 +96,7 @@ public class ConfirmationActivity extends Activity {
                 notifyType.setText("IN APP ONLY");
             } else {
                 notifyType.setText("IN APP and with PUSH NOTIFICATION");
-                long notifyMili = notifyMinute * 60;
+                long notifyMili = notifyMinute * 60 * 1000;
                 long timeMili = expMili - notifyMili;
                 scheduleNotification("Go get your car!", timeMili);
             }
@@ -126,7 +130,7 @@ public class ConfirmationActivity extends Activity {
                 notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
+        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS a");
         Log.d("NotificationTime", f.format(new Date(notifyTime)));
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
