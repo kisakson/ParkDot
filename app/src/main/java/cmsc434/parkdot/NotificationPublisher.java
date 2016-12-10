@@ -21,8 +21,12 @@ public class NotificationPublisher extends BroadcastReceiver {
     public static String NOTIFICATION_ID = "notification-id";
     public static String NOTIFICATION = "notification";
 
+    /**
+     * Configure notification settings
+     * @param context
+     * @param intent
+     */
     public void onReceive(Context context, Intent intent) {
-
         // Help setting vibrate, lights, and sound from a Stack Overflow posts:
         // http://stackoverflow.com/questions/18253482/vibrate-and-sound-defaults-on-notification
         // http://stackoverflow.com/questions/15809399/android-notification-sound

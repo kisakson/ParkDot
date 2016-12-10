@@ -26,7 +26,7 @@ import static android.view.View.INVISIBLE;
 
 public class ConfirmationActivity extends Activity {
     private TextView expirationTime, notifyTime, notifyType, notes;
-    private long expMili;
+    private long expMilli;
 
     public static final boolean ENABLE_DEVELOPER_TESTING = true;
     public static final double TESTING_LATITUDE = 38.9934527;
@@ -63,7 +63,7 @@ public class ConfirmationActivity extends Activity {
         SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS a");
         Log.d("NotificationExpir", f.format(c.getTime()));
 
-        expMili = c.getTimeInMillis();
+        expMilli = c.getTimeInMillis();
 
         if (expirationHour > 12) {
             expirationHour = expirationHour - 12;
@@ -92,15 +92,12 @@ public class ConfirmationActivity extends Activity {
         notifyType = (TextView) findViewById(R.id.notify_type_text);
         notes = (TextView) findViewById(R.id.note_text);
 
-        // skip notification section if user does not want to be notified
-        if (bundle.getString("notified").equals("no")) {
+        if (bundle.getString("notified").equals("no")) { // skip notification section if user does not want to be notified
             notifyTime.setText("None");
 
             TextView notifyLabel = (TextView) findViewById(R.id.notify_me_with_label);
             notifyLabel.setVisibility(INVISIBLE);
-
             notifyType.setVisibility(INVISIBLE);
-
             notes.setVisibility(INVISIBLE);
 
         } else {
@@ -113,13 +110,13 @@ public class ConfirmationActivity extends Activity {
                 notifyType.setText("IN APP ONLY");
             } else {
                 notifyType.setText("IN APP and with PUSH NOTIFICATION");
-                long notifyMili = notifyMinute * 60 * 1000;
+                long notifyMilli = notifyMinute * 60 * 1000;
 
                 if (ENABLE_DEVELOPER_TESTING) {
-                    notifyMili = TESTING_NOTIF_MINUTE * 60 * 1000;
+                    notifyMilli = TESTING_NOTIF_MINUTE * 60 * 1000;
                 }
 
-                long timeMili = expMili - notifyMili;
+                long timeMilli = expMilli - notifyMilli;
 
 
                 if (!bundle.getString("notes").isEmpty()) {
@@ -127,9 +124,10 @@ public class ConfirmationActivity extends Activity {
                 } else {
                     notifText = "Go get your car!";
                 }
-                scheduleNotification(notifText, timeMili);
+                scheduleNotification(notifText, timeMilli);
             }
 
+            // no notes
             if (!bundle.getString("notes").isEmpty()) {
                 notes.setText(bundle.getString("notes"));
             }
@@ -138,6 +136,10 @@ public class ConfirmationActivity extends Activity {
         editor.apply();
     }
 
+    /**
+     * Save notes
+     * @param v
+     */
     @TargetApi(Build.VERSION_CODES.M)
     public void onConfirmationConfirmClick(View v) {
         Intent resultIntent = getIntent();
@@ -149,6 +151,11 @@ public class ConfirmationActivity extends Activity {
         finish();
     }
 
+    /**
+     * Set up push notification
+     * @param notification
+     * @param notifyTime
+     */
     private void scheduleNotification(String notification, long notifyTime) {
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
