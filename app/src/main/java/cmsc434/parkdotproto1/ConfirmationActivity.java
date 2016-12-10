@@ -29,6 +29,11 @@ public class ConfirmationActivity extends Activity {
     private TextView expirationTime, notifyTime, notifyType, notes;
     private long expMili;
 
+    public static final boolean ENABLE_TESTING = true;
+    private static final int TESTING_EXPIRATION_HOUR = 16;  // in 24h
+    private static final int TESTING_EXPIRATION_MINUTE = 49;
+    private static final int TESTING_NOTIF_MINUTE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +49,15 @@ public class ConfirmationActivity extends Activity {
 
         Calendar c = new GregorianCalendar();
         c.set(c.get(Calendar.YEAR), c.get(c.MONTH), c.get(c.DATE), expirationHour, expirationMinute, 0);
+
+        if (ENABLE_TESTING) {
+            c.set(c.get(Calendar.YEAR),
+                    c.get(c.MONTH),
+                    c.get(c.DATE),
+                    TESTING_EXPIRATION_HOUR,
+                    TESTING_EXPIRATION_MINUTE,
+                    0);
+        }
 
         SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS a");
         Log.d("NotificationExpir", f.format(c.getTime()));
@@ -92,13 +106,25 @@ public class ConfirmationActivity extends Activity {
             int notifyMinute = bundle.getInt("notifyTime") * 5 + 5;
             notifyTime.setText(Integer.toString(notifyMinute) + " minutes prior");
 
+            String notifText;
+
             if (bundle.getInt("notifyType") == 0) {
                 notifyType.setText("IN APP ONLY");
             } else {
                 notifyType.setText("IN APP and with PUSH NOTIFICATION");
                 long notifyMili = notifyMinute * 60 * 1000;
                 long timeMili = expMili - notifyMili;
-                scheduleNotification("Go get your car!", timeMili);
+                if (ENABLE_TESTING) {
+                    notifyMili = TESTING_NOTIF_MINUTE * 60 * 1000;
+                    timeMili = expMili - notifyMili;
+                }
+
+                if (!bundle.getString("notes").isEmpty()) {
+                    notifText = bundle.getString("notes");
+                } else {
+                    notifText = "Go get your car!";
+                }
+                scheduleNotification(notifText, timeMili);
             }
 
             if (!bundle.getString("notes").isEmpty()) {
