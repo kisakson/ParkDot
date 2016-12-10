@@ -1,4 +1,4 @@
-package cmsc434.parkdotproto1;
+package cmsc434.parkdot;
 
 import android.app.Activity;
 import android.content.Intent;
