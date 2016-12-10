@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -145,7 +146,16 @@ public class MapsActivity extends AppCompatActivity implements
 
             @Override
             public View getInfoContents(Marker marker) {
-                return null;
+                // Inflate the layouts for the info window, title and snippet.
+                View infoContent = getLayoutInflater().inflate(R.layout.custom_marker_info, null);
+
+                TextView title = ((TextView) infoContent.findViewById(R.id.custom_marker_title));
+                title.setText(marker.getTitle());
+
+                TextView snippet = ((TextView) infoContent.findViewById(R.id.custom_marker_snippet));
+                snippet.setText(marker.getSnippet());
+
+                return infoContent;
             }
         });
 
@@ -230,6 +240,7 @@ public class MapsActivity extends AppCompatActivity implements
         }
 
         // Get saved marker location, if stored
+        // No need to set alarm again, as that
         // This should only run once.
         if (mMap != null && !mRunOnce) {
             // add notes section top left corner of map
