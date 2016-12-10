@@ -1,2 +1,58 @@
-# ParkDotProto1
-ParkDot CMSC434 Prototype Version 1
+# ParkDot
+
+For our semester-long project for CMSC434 (Introduction to Human-Computer Interaction), we decided to create an android app that gives the users the ability to store and utilize their parking information.
+
+ParkDot is an android app that allows you to:
+
+1. Add a parking spot (default is your current location)
+2. Set expiration time and notification settings
+3. Redirect to Google Maps for directions back to your parking spot
+
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+### Prerequisites
+
+* Minimum SDK Version: API 23: Android 6.0 (Marshmallow)
+
+### Installing
+
+1. Install [Android Studio](https://developer.android.com/studio/index.html)
+2. Clone ParkDot repo into your local directory
+
+## Deployment
+
+You can deploy the program on your android device or Android Studio's emulator (if you do not have an android device at hand).
+
+### Emulator
+
+1. Click run on android studio
+2. Click *Create New Virtual Device*
+3. Select a hardware under the *Phone* category (Nexus 5 is recommended)
+4. Select a system image with API level >= 23
+5. Click Finish
+6. Select your virtual device that you just created
+7. Click OK
+8. Virtual device window should pop up with the app open
+
+### Android device
+
+1. Enable *Developer Options* on your device
+2. Enable debugging in *Developer Options*
+3. Connect your device to your laptop/computer
+4. Click run on android studio
+5. Click your device under *Connected Devices*
+6. Click OK
+7. App should be open on your device
+
+## Built With
+
+* [Android Studio](https://developer.android.com/studio/index.html) - IDE used
+
+## Authors
+
+* [Kara Isakson](https://github.com/kisakson)
+* [Hojin (Sylvia) Kang](https://github.com/hojinskang)
+* [Rayna Qian](https://github.com/raynaqian)
+* [Thomas Yang](https://github.com/Seiashun)
