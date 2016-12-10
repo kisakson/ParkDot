@@ -3,17 +3,20 @@ package cmsc434.parkdotproto1;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static android.view.View.INVISIBLE;
 
@@ -23,7 +26,6 @@ import static android.view.View.INVISIBLE;
 
 public class ConfirmationActivity extends Activity {
     private TextView expirationTime, notifyTime, notifyType, notes;
-    public static final int MAP_ACTIVITY_REQUEST_CODE = 203;
     private long expMili;
 
     @Override
@@ -38,7 +40,11 @@ public class ConfirmationActivity extends Activity {
         int expirationHour = bundle.getInt("expirationHour");
         int expirationMinute = bundle.getInt("expirationMinute");
         String meridiem = "AM";
-        expMili = (expirationHour * 60 + expirationMinute) * 60000L;
+
+        Calendar c = new GregorianCalendar();
+        c.set(c.get(Calendar.YEAR), c.get(c.MONTH), c.get(c.DATE), expirationHour, expirationMinute, 0);
+
+        expMili = c.getTimeInMillis();
 
         if (expirationHour > 12) {
             expirationHour = expirationHour - 12;
@@ -86,9 +92,9 @@ public class ConfirmationActivity extends Activity {
                 notifyType.setText("IN APP ONLY");
             } else {
                 notifyType.setText("IN APP and with PUSH NOTIFICATION");
-                long notifyMili = notifyMinute * 60000L;
+                long notifyMili = notifyMinute * 60;
                 long timeMili = expMili - notifyMili;
-                scheduleNotification(getNotification("Go get your car!"), timeMili);
+                scheduleNotification("Go get your car!", timeMili);
             }
 
             if (!bundle.getString("notes").isEmpty()) {
@@ -96,7 +102,7 @@ public class ConfirmationActivity extends Activity {
             }
         }
 
-        editor.commit();
+        editor.apply();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -104,27 +110,26 @@ public class ConfirmationActivity extends Activity {
         Intent resultIntent = getIntent();
         resultIntent.putExtra("result", true);
         resultIntent.putExtra("notes", notes.getText());
+
         setResult(Activity.RESULT_OK, resultIntent);
 
         finish();
     }
 
-    private void scheduleNotification(Notification notification, long notifyTime) {
+    private void scheduleNotification(String notification, long notifyTime) {
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Log.d("NotificationSchedule", String.valueOf(notifyTime));
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, notifyTime, pendingIntent);
-    }
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+                NotificationPublisher.NOTIFICATION_REQUST_ID,
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
-    private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Parking Alert");
-        builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.orange_carpng);
-        return builder.build();
+        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
+        Log.d("NotificationTime", f.format(new Date(notifyTime)));
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, notifyTime, pendingIntent);
     }
 }

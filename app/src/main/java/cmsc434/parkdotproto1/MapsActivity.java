@@ -1,7 +1,6 @@
 package cmsc434.parkdotproto1;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +13,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +44,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Calendar;
-import java.util.Date;
-
 
 /**
  * This shows how to create a simple activity with a map and a marker on the map.
@@ -103,7 +98,6 @@ public class MapsActivity extends AppCompatActivity implements
 
     // alarm for push notification
     // https://nnish.com/2014/12/16/scheduled-notifications-in-android-using-alarm-manager/
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +163,7 @@ public class MapsActivity extends AppCompatActivity implements
         }
 
         // notification pop-up indicating time until expiration
-        if (mMap != null && mRunOnce && addParkingSpotButton.getVisibility() == View.INVISIBLE) {
+        if (mMap != null && addParkingSpotButton.getVisibility() == View.INVISIBLE) {
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
             ViewGroup mainView = (ViewGroup)findViewById(R.id.activity_maps);
             LayoutInflater inflater = this.getLayoutInflater();
@@ -246,7 +240,6 @@ public class MapsActivity extends AppCompatActivity implements
                 LatLng loc = new LatLng(Double.parseDouble(savedLoc.split(",")[0]),
                         Double.parseDouble(savedLoc.split(",")[1]));
 
-
                 Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
                 BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
 
@@ -299,7 +292,7 @@ public class MapsActivity extends AppCompatActivity implements
                 String locString = loc.latitude + "," + loc.longitude;
                 marker.setSnippet(loc.toString());
                 mEditor.putString(getString(R.string.saved_marker_location), locString);
-                mEditor.commit();
+                mEditor.apply();
                 Toast.makeText(MapsActivity.this, "Parking location updated", Toast.LENGTH_SHORT).show();
             }
         });
@@ -473,8 +466,19 @@ public class MapsActivity extends AppCompatActivity implements
                 getDirectionsButton.setVisibility(View.INVISIBLE);
                 clearMarkerButton.setVisibility(View.INVISIBLE);
                 mEditor.clear();
-                mEditor.commit();
+                mEditor.apply();
                 mSavedLocation.remove();
+
+                // Remove the scheduled PendingIntent
+                Intent removeIntent = new Intent(getApplicationContext(), NotificationPublisher.class);
+                PendingIntent removePendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
+                        NotificationPublisher.NOTIFICATION_REQUST_ID,
+                        removeIntent,
+                        0);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.cancel(removePendingIntent);
+                removePendingIntent.cancel();
 
                 TextView notes_view = (TextView) findViewById(R.id.note_text);
                 notes_view.setText("");
@@ -544,7 +548,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                         mEditor.putString(getString(R.string.saved_marker_notes), notes);
                     }
-                    mEditor.commit();
+                    mEditor.apply();
                 }
             }
         }

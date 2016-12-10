@@ -47,9 +47,6 @@ public class ParkingNoteActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("Testing Parking Note");
-        System.out.println("Parking Note: " + requestCode);
-        System.out.println("Parking Note: " + resultCode);
 
         switch(requestCode) {
             case(PARKING_NOTE_REQUEST_CODE) : {
