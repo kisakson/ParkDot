@@ -24,7 +24,6 @@
             </intent-filter>
         </activity>
         <activity android:name="cmsc434.parkdot.ExpirationTimeActivity"></activity>
-        <activity android:name="cmsc434.parkdot.ParkingTicketActivity"></activity>
         <activity android:name="cmsc434.parkdot.ParkingNoteActivity"></activity>
         <activity android:name="cmsc434.parkdot.ConfirmationActivity"></activity>
 
