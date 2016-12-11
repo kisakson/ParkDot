@@ -21,9 +21,14 @@ import java.util.GregorianCalendar;
 import static android.view.View.INVISIBLE;
 
 /**
+ * ConfirmationActivity calculates how much time until the input parking expires when the user
+ * presses the confirm button and displays the previous choices regarding the type of notification
+ * + the notes. This class formats all of the strings. It also sets an alarm for the pending
+ * notification.
+ * The layout for this file is confirmation.xml.
+ *
  * Created by hojinskang on 11/22/16.
  */
-
 public class ConfirmationActivity extends Activity {
     private TextView expirationTime, notifyTime, notifyType, notes;
     private long expMilli;

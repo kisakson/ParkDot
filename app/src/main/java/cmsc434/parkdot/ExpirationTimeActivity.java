@@ -11,9 +11,14 @@ import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
 /**
+ * ExpirationTimeActivity allows the user to input the type, frequency, and event of their parking
+ * reminder. The options for notification times are intervals of 5 minutes up to an hour before the
+ * parking ticket expires. There are also two options as to whether the user wants to be notified
+ * at all, either via in-app notifications or push notifications AND in-app notifications.
+ * The layout for this class is in layout/expiration_time.xml.
+ *
  * Created by hojinskang on 11/22/16.
  */
-
 public class ExpirationTimeActivity extends Activity {
     private TimePicker expirationTime;
     private NumberPicker notifyTime, notifyMinutes;

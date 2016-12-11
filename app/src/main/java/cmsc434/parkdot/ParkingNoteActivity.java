@@ -8,9 +8,14 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 
 /**
+ * ParkingNoteActivity implements the note text box. This class passes the input notes to the
+ * ConfirmationActivity screen where the user sees all of their selections before hitting "Confirm".
+ * This class also passes the input text to the ConfirmationActivity class as a bundle extra,
+ * allowing notes to be displayed over the MapActivity screen.
+ * The layout file for this is in res/layout/parking_note.xml.
+ *
  * Created by hojinskang on 11/23/16.
  */
-
 public class ParkingNoteActivity extends Activity {
     private EditText notes;
     private NumberPicker notifyType;

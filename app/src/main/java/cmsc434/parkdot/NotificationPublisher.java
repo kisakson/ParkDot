@@ -1,9 +1,5 @@
 package cmsc434.parkdot;
 
-/**
- * Created by hojinskang on 12/9/16.
- */
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -15,6 +11,13 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+/**
+ * NotificationPublisher is responsible for just the push notifications (as our in-app notifications
+ * are simply windows that open once the app is resumed).
+ * Related xml files are layout/notification_popup.xml
+ *
+ * Created by hojinskang on 12/9/16.
+ */
 public class NotificationPublisher extends BroadcastReceiver {
 
     public static final int NOTIFICATION_REQUST_ID = 0;

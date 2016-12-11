@@ -47,7 +47,14 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 
 /**
- * This shows how to create a simple activity with a map and a marker on the map.
+ * MapsActivity implements the main screen/main activity. The user sees the GoogleMap upon first
+ * opening the app. MapsActivity has the marker, the 2 buttons (Get Directions and Clear Marker),
+ * and built-in buttons in the lower right hand corner for those who are more familiar with Google.
+ * The Map shows the user's current location. The marker is also draggable, dynamically changing
+ * coordinates if the user chooses to move their car.
+ * The layout file for this class is /res/layout/activity_maps.xml.
+ * The icon for the marker is in res/drawable/orange_carpng.
+ * The colors are in values/colors.
  */
 public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback,
