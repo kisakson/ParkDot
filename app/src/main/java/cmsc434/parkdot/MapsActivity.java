@@ -251,8 +251,10 @@ public class MapsActivity extends AppCompatActivity implements
             String savedLoc = mSharedPref.getString(getString(R.string.saved_marker_location), "");
             String savedNotes = mSharedPref.getString(getString(R.string.saved_marker_notes), "No notes");
 
+            LatLng loc;
+
             if (!savedLoc.equals("")) {
-                LatLng loc = new LatLng(Double.parseDouble(savedLoc.split(",")[0]),
+                loc = new LatLng(Double.parseDouble(savedLoc.split(",")[0]),
                         Double.parseDouble(savedLoc.split(",")[1]));
 
                 Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
@@ -263,7 +265,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                 mSavedLocation = mMap.addMarker(new MarkerOptions()
                         .position(loc)
-                        .title("Saved Parking Location")
+                        .title("Parking Location")
                         .snippet(locString)
                         .icon(markerIcon)
                         .draggable(true));
@@ -496,8 +498,28 @@ public class MapsActivity extends AppCompatActivity implements
 
                 // Clear the information about the markers
                 mEditor.clear();
-                mEditor.apply();
                 mSavedLocation.remove();
+
+                LatLng loc = new LatLng(mCurrentLocation.getLatitude(),
+                        mCurrentLocation.getLongitude());
+
+                String locString = loc.latitude + "," + loc.longitude;
+
+                // Coordinates from mCurrentLocation show up to 7 decimal places.
+                //mEditor.putString(getString(R.string.saved_marker_location), locString);
+
+                // Change the marker image to a custom image
+                Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
+                BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
+
+                mSavedLocation = mMap.addMarker(new MarkerOptions()
+                        .position(loc)
+                        .title("Parking Location")
+                        .snippet(loc.toString())
+                        .icon(markerIcon)
+                        .draggable(true));
+
+                mEditor.apply();
 
                 // Remove the scheduled PendingIntent
                 Intent removeIntent = new Intent(getApplicationContext(), NotificationPublisher.class);
@@ -576,7 +598,7 @@ public class MapsActivity extends AppCompatActivity implements
 
                     mSavedLocation = mMap.addMarker(new MarkerOptions()
                             .position(loc)
-                            .title("Saved Parking Location")
+                            .title("Parking Location")
                             .snippet(loc.toString())
                             .icon(markerIcon)
                             .draggable(true));
