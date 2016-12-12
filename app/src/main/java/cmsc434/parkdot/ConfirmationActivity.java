@@ -33,13 +33,6 @@ public class ConfirmationActivity extends Activity {
     private TextView expirationTime, notifyTime, notifyType, notes;
     private long expMilli;
 
-    public static final boolean ENABLE_DEVELOPER_TESTING = false;
-    public static final double TESTING_LATITUDE = 38.9934527;
-    public static final double TESTING_LONGITUDE = -76.9357481;
-    private static final int TESTING_EXPIRATION_HOUR = 19;  // in 24h
-    private static final int TESTING_EXPIRATION_MINUTE = 00;
-    private static final int TESTING_NOTIF_MINUTE = 15;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,15 +48,6 @@ public class ConfirmationActivity extends Activity {
 
         Calendar c = new GregorianCalendar();
         c.set(c.get(Calendar.YEAR), c.get(c.MONTH), c.get(c.DATE), expirationHour, expirationMinute, 0);
-
-        if (ENABLE_DEVELOPER_TESTING) {
-            c.set(c.get(Calendar.YEAR),
-                    c.get(c.MONTH),
-                    c.get(c.DATE),
-                    TESTING_EXPIRATION_HOUR,
-                    TESTING_EXPIRATION_MINUTE,
-                    0);
-        }
 
         SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS a");
         Log.d("NotificationExpir", f.format(c.getTime()));
@@ -116,10 +100,6 @@ public class ConfirmationActivity extends Activity {
             } else {
                 notifyType.setText("IN APP and with PUSH NOTIFICATION");
                 long notifyMilli = notifyMinute * 60 * 1000;
-
-                if (ENABLE_DEVELOPER_TESTING) {
-                    notifyMilli = TESTING_NOTIF_MINUTE * 60 * 1000;
-                }
 
                 long timeMilli = expMilli - notifyMilli;
 

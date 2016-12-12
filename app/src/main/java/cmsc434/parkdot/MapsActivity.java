@@ -259,15 +259,18 @@ public class MapsActivity extends AppCompatActivity implements
             String savedNotes = mSharedPref.getString(getString(R.string.saved_marker_notes), "No notes");
 
             if (!savedLoc.equals("")) {
+                // Saved location
                 LatLng loc = new LatLng(Double.parseDouble(savedLoc.split(",")[0]),
                         Double.parseDouble(savedLoc.split(",")[1]));
 
+                // Change the marker icon
                 Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
                 BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
 
                 // Because marker location is stored with more precision, format decimal places
                 String locString = "lat/lng: (" + mDF7.format(loc.latitude) + "," + mDF7.format(loc.longitude) + ")";
 
+                // Add the marker to the map
                 mSavedLocation = mMap.addMarker(new MarkerOptions()
                         .position(loc)
                         .title("Saved Parking Location")
@@ -296,8 +299,6 @@ public class MapsActivity extends AppCompatActivity implements
         // Set an onMarkerDragListener for when the user wants to drag the Marker.
         // You must long press the Marker in order to drag it
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-
-
             @Override
             public void onMarkerDragStart(Marker marker) {
                 // Show the marker snippet when the user wants to drag the marker
@@ -307,25 +308,29 @@ public class MapsActivity extends AppCompatActivity implements
             @Override
             public void onMarkerDrag(Marker marker) {
                 // Update the marker snippet as the user drags the marker
-                LatLng loc = marker.getPosition();
-                marker.setSnippet("lat/lng: (" + mDF7.format(loc.latitude) + "," + mDF7.format(loc.longitude) + ")");
-                marker.showInfoWindow();    // Update the InfowWindow
+                if (!mSharedPref.getString(getString(R.string.saved_marker_location), "").equals("")) {
+                    LatLng loc = marker.getPosition();
+                    marker.setSnippet("lat/lng: (" + mDF7.format(loc.latitude) + "," + mDF7.format(loc.longitude) + ")");
+                    marker.showInfoWindow();    // Update the InfowWindow
+                }
             }
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                // Set the snippet to show the new coordinates
-                // Save the new location to the Shared Preferences.
-                LatLng loc = marker.getPosition();
+                if (!mSharedPref.getString(getString(R.string.saved_marker_location), "").equals("")) {
+                    // Set the snippet to show the new coordinates
+                    // Save the new location to the Shared Preferences.
+                    LatLng loc = marker.getPosition();
 
-                // Store more precise location coordinates in SharedPreferences,
-                String locString = loc.latitude + "," + loc.longitude;
+                    // Store more precise location coordinates in SharedPreferences,
+                    String locString = loc.latitude + "," + loc.longitude;
 
-                // Show user DecimalFormated coordinates
-                marker.setSnippet("lat/lng: (" + mDF7.format(loc.latitude) + "," + mDF7.format(loc.longitude) + ")");
-                mEditor.putString(getString(R.string.saved_marker_location), locString);
-                mEditor.apply();
-                Toast.makeText(MapsActivity.this, "Parking location updated", Toast.LENGTH_SHORT).show();
+                    // Show user DecimalFormated coordinates
+                    marker.setSnippet("lat/lng: (" + mDF7.format(loc.latitude) + "," + mDF7.format(loc.longitude) + ")");
+                    mEditor.putString(getString(R.string.saved_marker_location), locString);
+                    mEditor.apply();
+                    Toast.makeText(MapsActivity.this, "Parking location updated", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -367,6 +372,25 @@ public class MapsActivity extends AppCompatActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        if (mCurrentLocation != null &&
+                mSharedPref.getString(getString(R.string.saved_marker_location), "").equals("")) {
+            // There is no saved parking location
+            // This is here because we NEED the current location information
+            LatLng loc = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+
+            // Change the marker icon
+            Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
+            BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
+
+            // Add the marker to the map
+            mSavedLocation = mMap.addMarker(new MarkerOptions()
+                    .position(loc)
+                    .title("Parking Location")
+                    .snippet("You can drag the marker to where you parked your car, if needed.")
+                    .icon(markerIcon)
+                    .draggable(true));
+        }
     }
 
     // Handles failure to connect to Google Play services
@@ -504,7 +528,13 @@ public class MapsActivity extends AppCompatActivity implements
                 // Clear the information about the markers
                 mEditor.clear();
                 mEditor.apply();
-                mSavedLocation.remove();
+                //mSavedLocation.remove();
+
+                // Reset the marker location
+                mSavedLocation.setPosition(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+                mSavedLocation.setTitle("Parking Location");
+                mSavedLocation.setSnippet("You can drag the marker to where you parked your car, if needed.");
+                mSavedLocation.hideInfoWindow();
 
                 // Remove the scheduled PendingIntent
                 Intent removeIntent = new Intent(getApplicationContext(), NotificationPublisher.class);
@@ -562,31 +592,23 @@ public class MapsActivity extends AppCompatActivity implements
                     getDirectionsButton.setVisibility(View.VISIBLE);
                     clearMarkerButton.setVisibility(View.VISIBLE);
 
-                    // Get the current location of the person
-                    LatLng loc = new LatLng(mCurrentLocation.getLatitude(),
-                            mCurrentLocation.getLongitude());
+                    // Get the current location of the marker
+                    LatLng loc = mSavedLocation.getPosition();
 
-                    // If enabled, set the coordinates to the same place as in the video
-                    if (ConfirmationActivity.ENABLE_DEVELOPER_TESTING) {
-                        loc = new LatLng(ConfirmationActivity.TESTING_LATITUDE,
-                                ConfirmationActivity.TESTING_LONGITUDE);
-                    }
+                    // Format the decimals to 7 places
+                    String locString = "lat/lng: (" + mDF7.format(loc.latitude) + "," + mDF7.format(loc.longitude) + ")";
 
-                    String locString = loc.latitude + "," + loc.longitude;
-
-                    // Coordinates from mCurrentLocation show up to 7 decimal places.
-                    mEditor.putString(getString(R.string.saved_marker_location), locString);
+                    // Store the marker location in SharedPreferences
+                    mEditor.putString(getString(R.string.saved_marker_location), loc.latitude + "," + loc.longitude);
 
                     // Change the marker image to a custom image
                     Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
                     BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
 
-                    mSavedLocation = mMap.addMarker(new MarkerOptions()
-                            .position(loc)
-                            .title("Saved Parking Location")
-                            .snippet(loc.toString())
-                            .icon(markerIcon)
-                            .draggable(true));
+                    // Update the marker Title and Snippet
+                    mSavedLocation.setTitle("Saved Parking Location");
+                    mSavedLocation.setSnippet(locString);
+                    mSavedLocation.hideInfoWindow();
 
                     // If applicable, make a visible TextView that displays the user's notes.
                     Bundle bundle = data.getExtras();
