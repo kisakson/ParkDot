@@ -387,9 +387,10 @@ public class MapsActivity extends AppCompatActivity implements
             mSavedLocation = mMap.addMarker(new MarkerOptions()
                     .position(loc)
                     .title("Parking Location")
-                    .snippet("You can drag the marker to where you parked your car, if needed.")
+                    .snippet("You can drag the marker to your parking spot.")
                     .icon(markerIcon)
                     .draggable(true));
+            mSavedLocation.showInfoWindow();
         }
     }
 
