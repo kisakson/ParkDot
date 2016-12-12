@@ -232,9 +232,11 @@ public class MapsActivity extends AppCompatActivity implements
                 }
 
                 if (diffTime <= 0) {
-                    expTimeLeft.setText("Parking has expired!");
+                    expTimeLeft.setText("Your parking has expired!");
+                    expTimeLeft.setTextSize(20);
                 } else {
-                    expTimeLeft.setText(hourLeftStr + ":" + minLeftStr + " left until parking expires");
+                    expTimeLeft.setText("You have " + hourLeftStr + ":" + minLeftStr + " left until your parking expires.");
+                    expTimeLeft.setTextSize(20);
                 }
 
                 builder.setView(dialogView)
