@@ -99,6 +99,7 @@ public class MapsActivity extends AppCompatActivity implements
     // Create a Marker object that will store vehicle location
     private Marker mSavedLocation;
     private boolean mRunOnce = false;
+    private boolean mRunOnceConnected = true;
 
     // Create SharedPreferences to store Marker location as well as other information.
     // Information gathered from: https://developer.android.com/training/basics/data-storage/shared-preferences.html
@@ -282,6 +283,28 @@ public class MapsActivity extends AppCompatActivity implements
                 addParkingSpotButton.setVisibility(View.INVISIBLE);
                 getDirectionsButton.setVisibility(View.VISIBLE);
                 clearMarkerButton.setVisibility(View.VISIBLE);
+            } else {
+                if (mCurrentLocation == null) {
+                    // Change the marker icon
+                    Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
+                    BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
+
+                    // Because marker location is stored with more precision, format decimal places
+                    String locString = "lat/lng: (" + mDF7.format(mDefaultLocation.latitude) + "," + mDF7.format(mDefaultLocation.longitude) + ")";
+
+                    // Add the marker to a default location on the map
+                    mSavedLocation = mMap.addMarker(new MarkerOptions()
+                            .position(mDefaultLocation)
+                            .title("Parking Location")
+                            .snippet(locString)
+                            .icon(markerIcon)
+                            .draggable(true));
+
+                    // Change the visibility of the corresponding buttons
+                    addParkingSpotButton.setVisibility(View.INVISIBLE);
+                    getDirectionsButton.setVisibility(View.VISIBLE);
+                    clearMarkerButton.setVisibility(View.VISIBLE);
+                }
             }
 
             // Grab the stored notes and show them with the correct text
@@ -374,7 +397,8 @@ public class MapsActivity extends AppCompatActivity implements
         mapFragment.getMapAsync(this);
 
         if (mCurrentLocation != null &&
-                mSharedPref.getString(getString(R.string.saved_marker_location), "").equals("")) {
+                mSharedPref.getString(getString(R.string.saved_marker_location), "").equals("") &&
+                mRunOnceConnected) {
             // There is no saved parking location
             // This is here because we NEED the current location information
             LatLng loc = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
@@ -387,10 +411,11 @@ public class MapsActivity extends AppCompatActivity implements
             mSavedLocation = mMap.addMarker(new MarkerOptions()
                     .position(loc)
                     .title("Parking Location")
-                    .snippet("You can drag the marker to your parking spot.")
+                    .snippet(getString(R.string.no_saved_snippet))
                     .icon(markerIcon)
                     .draggable(true));
             mSavedLocation.showInfoWindow();
+            mRunOnceConnected = false;
         }
     }
 
@@ -533,7 +558,7 @@ public class MapsActivity extends AppCompatActivity implements
                 // Reset the marker location
                 mSavedLocation.setPosition(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                 mSavedLocation.setTitle("Parking Location");
-                mSavedLocation.setSnippet("You can drag the marker to where you parked your car, if needed.");
+                mSavedLocation.setSnippet(getString(R.string.no_saved_snippet));
                 mSavedLocation.hideInfoWindow();
 
                 // Remove the scheduled PendingIntent
