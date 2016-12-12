@@ -1,9 +1,5 @@
 package cmsc434.parkdot;
 
-/**
- * Created by hojinskang on 12/9/16.
- */
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -15,14 +11,25 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+/**
+ * NotificationPublisher is responsible for just the push notifications (as our in-app notifications
+ * are simply windows that open once the app is resumed).
+ * Related xml files are layout/notification_popup.xml
+ *
+ * Created by hojinskang on 12/9/16.
+ */
 public class NotificationPublisher extends BroadcastReceiver {
 
     public static final int NOTIFICATION_REQUST_ID = 0;
     public static String NOTIFICATION_ID = "notification-id";
     public static String NOTIFICATION = "notification";
 
+    /**
+     * Configure notification settings
+     * @param context
+     * @param intent
+     */
     public void onReceive(Context context, Intent intent) {
-
         // Help setting vibrate, lights, and sound from a Stack Overflow posts:
         // http://stackoverflow.com/questions/18253482/vibrate-and-sound-defaults-on-notification
         // http://stackoverflow.com/questions/15809399/android-notification-sound
