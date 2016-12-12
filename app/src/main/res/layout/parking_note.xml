@@ -21,10 +21,11 @@
         android:ems="10"
         android:id="@+id/notes"
         android:layout_marginTop="20dp"
-        android:minHeight="170dp"
+        android:minHeight="50dp"
         android:maxLines="5"
         android:maxLength="50"
         android:background="@drawable/border"
+        android:padding="10dp"
         />
 
     <Space
