@@ -528,34 +528,12 @@ public class MapsActivity extends AppCompatActivity implements
                 // Clear the information about the markers
                 mEditor.clear();
                 mEditor.apply();
-                //mSavedLocation.remove();
 
                 // Reset the marker location
                 mSavedLocation.setPosition(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                 mSavedLocation.setTitle("Parking Location");
                 mSavedLocation.setSnippet("You can drag the marker to where you parked your car, if needed.");
                 mSavedLocation.hideInfoWindow();
-
-                LatLng loc = new LatLng(mCurrentLocation.getLatitude(),
-                        mCurrentLocation.getLongitude());
-
-                String locString = loc.latitude + "," + loc.longitude;
-
-                // Coordinates from mCurrentLocation show up to 7 decimal places.
-                //mEditor.putString(getString(R.string.saved_marker_location), locString);
-
-                // Change the marker image to a custom image
-                Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
-                BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
-
-                mSavedLocation = mMap.addMarker(new MarkerOptions()
-                        .position(loc)
-                        .title("Parking Location")
-                        .snippet(loc.toString())
-                        .icon(markerIcon)
-                        .draggable(true));
-
-                mEditor.apply();
 
                 // Remove the scheduled PendingIntent
                 Intent removeIntent = new Intent(getApplicationContext(), NotificationPublisher.class);
