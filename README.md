@@ -81,4 +81,4 @@ You can deploy the program on your android device or Android Studio's emulator (
 
 ### Edit text multiple lines
 
-* http://stackoverflow.com/questions/7092961/edittext-maxlines-not-working-user-can-still-input-more-lines-than-set */
+* http://stackoverflow.com/questions/7092961/edittext-maxlines-not-working-user-can-still-input-more-lines-than-set
