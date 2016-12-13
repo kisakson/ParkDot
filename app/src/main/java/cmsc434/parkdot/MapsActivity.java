@@ -287,30 +287,8 @@ public class MapsActivity extends AppCompatActivity implements
                 addParkingSpotButton.setVisibility(View.INVISIBLE);
                 getDirectionsButton.setVisibility(View.VISIBLE);
                 clearMarkerButton.setVisibility(View.VISIBLE);
-            } /*else {
-                if (mCurrentLocation == null) {
-                    // Change the marker icon
-                    Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
-                    BitmapDescriptor markerIcon = getMarkerIconFromDrawable(carDrawable);
-
-                    // Because marker location is stored with more precision, format decimal places
-                    String locString = "lat/lng: (" + mDF7.format(mDefaultLocation.latitude) + "," + mDF7.format(mDefaultLocation.longitude) + ")";
-
-                    // Add the marker to a default location on the map
-                    mSavedLocation = mMap.addMarker(new MarkerOptions()
-                            .position(mDefaultLocation)
-                            .title("Parking Location")
-                            .snippet(locString)
-                            .icon(markerIcon)
-                            .draggable(true));
-
-                    // Change the visibility of the corresponding buttons
-                    addParkingSpotButton.setVisibility(View.INVISIBLE);
-                    getDirectionsButton.setVisibility(View.VISIBLE);
-                    clearMarkerButton.setVisibility(View.VISIBLE);
-                }
-            }*/
-
+            }
+            
             // Grab the stored notes and show them with the correct text
             if (!savedNotes.equals("No notes")) {
                 TextView notes_view = (TextView) findViewById(R.id.note_text);
