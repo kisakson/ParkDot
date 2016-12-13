@@ -186,7 +186,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         // notification pop-up indicating time until expiration
         // occurs every time you open the app
-        if (mMap != null && addParkingSpotButton.getVisibility() == View.INVISIBLE) {
+        if (mMap != null && addParkingSpotButton.getVisibility() == View.INVISIBLE && expTime.getString("expTime", "yes").equals("yes")) {
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
             ViewGroup mainView = (ViewGroup)findViewById(R.id.activity_maps);
             LayoutInflater inflater = this.getLayoutInflater();
