@@ -74,18 +74,38 @@
         android:maxLines="3"
         />
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/question_text"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:padding="10dp"
-        android:background="@drawable/border"
-        android:visibility="visible"
-        android:layout_marginTop="150dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="200dp"/>
+        android:layout_height="300dp">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/question_text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:padding="10dp"
+            android:background="@drawable/border"
+            android:visibility="invisible"
+            android:layout_marginTop="150dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="10dp" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:text="Got it!"
+            android:visibility="invisible"
+            android:layout_alignParentBottom="true"
+            android:layout_alignEnd="@+id/question_text"
+            android:layout_margin="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="#fff"
+            android:textSize="11dp"
+            android:onClick="onClickGotIt"
+            />
+
+    </RelativeLayout>
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -99,5 +119,5 @@
         android:onClick="onClickQuestionButton"
         />
     />
-
 </RelativeLayout>
+
