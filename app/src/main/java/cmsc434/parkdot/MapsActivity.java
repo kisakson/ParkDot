@@ -1,6 +1,7 @@
 package cmsc434.parkdot;
 
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -651,5 +653,10 @@ public class MapsActivity extends AppCompatActivity implements
                 }
             }
         }
+    }
+
+    public void onClickQuestionButton(View view) {
+        TextView questionView = (TextView) findViewById(R.id.question_text);
+        questionView.setVisibility(View.VISIBLE);
     }
 }
