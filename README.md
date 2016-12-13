@@ -57,3 +57,28 @@ You can deploy the program on your android device or Android Studio's emulator (
 * [Hojin (Sylvia) Kang](https://github.com/hojinskang)
 * [Rayna Qian](https://github.com/raynaqian)
 * [Thomas Yang](https://github.com/Seiashun)
+
+## References
+
+### Google Maps
+
+* https://github.com/googlemaps/android-samples/blob/master/tutorials/CurrentPlaceDetailsOnMap/app/src/main/java/com/example/currentplacedetailsonmap/MapsActivityCurrentPlaces.java
+* https://github.com/googlemaps/android-samples/blob/master/ApiDemos/app/src/main/java/com/example/mapdemo/BasicMapDemoActivity.java
+
+### Push notification
+
+* https://nnish.com/2014/12/16/scheduled-notifications-in-android-using-alarm-manager/
+* http://stackoverflow.com/questions/18253482/vibrate-and-sound-defaults-on-notification
+* http://stackoverflow.com/questions/15809399/android-notification-sound
+
+### Share data across activities
+
+* https://developers.google.com/maps/documentation/android-api/intents
+
+### Image marker
+
+* http://stackoverflow.com/questions/18053156/set-image-from-drawable-as-marker-in-google-map-version-2
+
+### Edit text multiple lines
+
+* http://stackoverflow.com/questions/7092961/edittext-maxlines-not-working-user-can-still-input-more-lines-than-set */
