@@ -281,13 +281,13 @@ public class MapsActivity extends AppCompatActivity implements
                         .title("Parking Location")
                         .snippet(locString)
                         .icon(markerIcon)
-                        .draggable(true));
+                        .draggable(false));
 
                 // Change the visibility of the corresponding buttons
                 addParkingSpotButton.setVisibility(View.INVISIBLE);
                 getDirectionsButton.setVisibility(View.VISIBLE);
                 clearMarkerButton.setVisibility(View.VISIBLE);
-            } else {
+            } /*else {
                 if (mCurrentLocation == null) {
                     // Change the marker icon
                     Drawable carDrawable = getResources().getDrawable(R.drawable.orange_carpng);
@@ -309,7 +309,7 @@ public class MapsActivity extends AppCompatActivity implements
                     getDirectionsButton.setVisibility(View.VISIBLE);
                     clearMarkerButton.setVisibility(View.VISIBLE);
                 }
-            }
+            }*/
 
             // Grab the stored notes and show them with the correct text
             if (!savedNotes.equals("No notes")) {
@@ -563,6 +563,7 @@ public class MapsActivity extends AppCompatActivity implements
                 mSavedLocation.setPosition(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                 mSavedLocation.setTitle("Parking Location");
                 mSavedLocation.setSnippet(getString(R.string.no_saved_snippet));
+                mSavedLocation.setDraggable(true);
                 mSavedLocation.hideInfoWindow();
 
                 // Remove the scheduled PendingIntent
@@ -637,6 +638,7 @@ public class MapsActivity extends AppCompatActivity implements
                     // Update the marker Title and Snippet
                     mSavedLocation.setTitle("Saved Parking Location");
                     mSavedLocation.setSnippet(locString);
+                    mSavedLocation.setDraggable(false);
                     mSavedLocation.hideInfoWindow();
 
                     // If applicable, make a visible TextView that displays the user's notes.

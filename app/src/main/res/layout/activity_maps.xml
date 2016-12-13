@@ -117,6 +117,7 @@
         android:layout_alignParentEnd="true"
         android:padding="10dp"
         android:onClick="onClickQuestionButton"
+        android:visibility="invisible"
         />
     />
 </RelativeLayout>
