@@ -67,6 +67,7 @@ public class ConfirmationActivity extends Activity {
         editor.putString("expHour", hour);
         editor.putString("expMinute", minute);
         editor.putString("meridiem", meridiem);
+        editor.putString("expTime","yes");
 
         // format time
         if (expirationHour < 10) {
@@ -79,13 +80,14 @@ public class ConfirmationActivity extends Activity {
 
         if (bundle.getString("expiration").equals("no")) {
             expirationTime.setText("None");
+            editor.putString("expTime","no");
         }
 
         notifyTime = (TextView) findViewById(R.id.notify_time_text);
         notifyType = (TextView) findViewById(R.id.notify_type_text);
         notes = (TextView) findViewById(R.id.note_text);
 
-        if (bundle.getString("notified").equals("no")) { // skip notification section if user does not want to be notified
+        if (bundle.getString("expiration").equals("no") || bundle.getString("notified").equals("no")) { // skip notification section if user has no expiration time or does not want to be notified
             notifyTime.setText("None");
 
             TextView notifyLabel = (TextView) findViewById(R.id.notify_me_with_label);

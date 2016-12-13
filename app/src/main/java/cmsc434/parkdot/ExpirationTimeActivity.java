@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
@@ -47,6 +48,17 @@ public class ExpirationTimeActivity extends Activity {
         notifyMinutes.setMinValue(0);
         notifyMinutes.setMaxValue(0);
         notifyMinutes.setDisplayedValues( new String[] { "minutes prior" } );
+
+        // If no expiration time, then no notification
+        expiration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    notified.setChecked(true);
+                    notified.setEnabled(false);
+                }
+            }
+        });
     }
 
     /**
@@ -56,7 +68,7 @@ public class ExpirationTimeActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.M)
     public void onExpirationTimeNextButtonClick(View v) {
         Intent intent;
-        if (notified.isChecked()) { // skip to confirmation if user does not want to be notified
+        if (expiration.isChecked() || notified.isChecked()) { // skip to confirmation if user does not want to be notified
             intent = new Intent(getApplicationContext(), ConfirmationActivity.class);
         } else {
             intent = new Intent(getApplicationContext(), ParkingNoteActivity.class);
