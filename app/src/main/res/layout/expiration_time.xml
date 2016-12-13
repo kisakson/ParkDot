@@ -20,13 +20,22 @@
         android:layout_weight="1"
         android:timePickerMode="spinner" />
 
+    <CheckBox
+        android:text="NO expiration time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/exp_checkbox"
+        android:layout_weight="1"
+        android:layout_gravity="center"/>
+
     <TextView
-        android:text="Notify me..."
+        android:text="Notify Me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -50,7 +59,7 @@
             android:layout_gravity="center" />
 
     </LinearLayout>
-
+<!--
     <TextView
         android:text="...before expiration"
         android:layout_width="wrap_content"
@@ -58,6 +67,7 @@
         android:layout_weight="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:layout_gravity="center" />
+        -->
 
     <CheckBox
         android:text="I do NOT want to be notified"
@@ -65,8 +75,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/notify_checkbox"
         android:layout_weight="1"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp" />
+        android:layout_gravity="center" />
 
     <Button
         android:text="Next"
@@ -77,7 +86,7 @@
         android:layout_weight="1"
         android:layout_gravity="center"
         android:onClick="onExpirationTimeNextButtonClick"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:background="@color/colorAccentDark"/>
 
 

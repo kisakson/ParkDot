@@ -22,7 +22,7 @@ import android.widget.TimePicker;
 public class ExpirationTimeActivity extends Activity {
     private TimePicker expirationTime;
     private NumberPicker notifyTime, notifyMinutes;
-    private CheckBox notified;
+    private CheckBox expiration, notified;
 
     private static final int EXPIRATION_REQUEST_CODE = 1;
 
@@ -32,6 +32,7 @@ public class ExpirationTimeActivity extends Activity {
         setContentView(R.layout.expiration_time);
 
         expirationTime = (TimePicker) findViewById(R.id.exp_time);
+        expiration = (CheckBox) findViewById(R.id.exp_checkbox);
         notifyTime = (NumberPicker) findViewById(R.id.notify_time);
         notifyMinutes = (NumberPicker) findViewById(R.id.notify_minutes);
         notified = (CheckBox) findViewById(R.id.notify_checkbox);
@@ -45,7 +46,7 @@ public class ExpirationTimeActivity extends Activity {
         /* Limit notification time to minutes */
         notifyMinutes.setMinValue(0);
         notifyMinutes.setMaxValue(0);
-        notifyMinutes.setDisplayedValues( new String[] { "minutes" } );
+        notifyMinutes.setDisplayedValues( new String[] { "minutes prior" } );
     }
 
     /**
@@ -66,6 +67,11 @@ public class ExpirationTimeActivity extends Activity {
         bundle.putInt("expirationHour", expirationTime.getHour());
         bundle.putInt("expirationMinute", expirationTime.getMinute());
         bundle.putInt("notifyTime", notifyTime.getValue());
+        if (expiration.isChecked()) {
+            bundle.putString("expiration", "no");
+        } else {
+            bundle.putString("expiration", "yes");
+        }
         if (notified.isChecked()) {
             bundle.putString("notified", "no");
         } else {
