@@ -656,19 +656,4 @@ public class MapsActivity extends AppCompatActivity implements
             }
         }
     }
-
-    public void onClickQuestionButton(View view) {
-        TextView questionView = (TextView) findViewById(R.id.question_text);
-        Button gotItButton = (Button) findViewById(R.id.cancel);
-        questionView.setVisibility(View.VISIBLE);
-        gotItButton.setVisibility(View.VISIBLE);
-
-    }
-
-    public void onClickGotIt(View view) {
-        TextView questionView = (TextView) findViewById(R.id.question_text);
-        Button gotItButton = (Button) findViewById(R.id.cancel);
-        questionView.setVisibility(View.INVISIBLE);
-        gotItButton.setVisibility(View.INVISIBLE);
-    }
 }
