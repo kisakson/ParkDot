@@ -56,6 +56,9 @@ public class ExpirationTimeActivity extends Activity {
                 if (isChecked) {
                     notified.setChecked(true);
                     notified.setEnabled(false);
+                } else {
+                    notified.setChecked(false);
+                    notified.setEnabled(true);
                 }
             }
         });
