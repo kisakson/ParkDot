@@ -111,7 +111,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:layout_marginTop="5dp"
         android:padding="21dp"
-        android:minHeight="100dp"
+        android:minHeight="50dp"
+        android:maxLines="3"
         android:background="@drawable/border_faded" />
 
 </GridLayout>

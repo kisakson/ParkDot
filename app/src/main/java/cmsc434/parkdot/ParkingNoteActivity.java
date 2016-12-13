@@ -3,6 +3,7 @@ package cmsc434.parkdot;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -69,5 +70,31 @@ public class ParkingNoteActivity extends Activity {
                 }
             }
         }
+    }
+
+    /* Credit goes to
+    http://stackoverflow.com/questions/7092961/
+    edittext-maxlines-not-working-user-can-still-input-more-lines-than-set */
+    public void onEditNotesText(View view) {
+        view.setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                    String notes = ((EditText) v).getText().toString();
+                    int editTextRowCount = notes.split("\\n").length;
+
+                    // Rayna's code here
+                    if (editTextRowCount >= 3) {
+                        int lastBreakIndex = notes.lastIndexOf("\n");
+                        String limitedNotes = notes.substring(0, lastBreakIndex);
+                        ((EditText) v).setText("");
+                        ((EditText) v).append(limitedNotes);
+                    }
+                }
+                return false;
+            }
+        });
+
     }
 }
