@@ -16,6 +16,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 * Minimum SDK Version: API 23: Android 6.0 (Marshmallow)
 * Google Maps installed on your device
+* Enable location services
 
 ### Installing
 
