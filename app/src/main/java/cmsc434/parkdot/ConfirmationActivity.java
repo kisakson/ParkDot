@@ -77,6 +77,10 @@ public class ConfirmationActivity extends Activity {
         }
         expirationTime.setText(hour + ":" + minute + " " + meridiem);
 
+        if (bundle.getString("expiration").equals("no")) {
+            expirationTime.setText("None");
+        }
+
         notifyTime = (TextView) findViewById(R.id.notify_time_text);
         notifyType = (TextView) findViewById(R.id.notify_type_text);
         notes = (TextView) findViewById(R.id.note_text);
