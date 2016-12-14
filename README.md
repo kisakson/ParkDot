@@ -8,6 +8,8 @@ ParkDot is an android app that allows you to:
 2. Set expiration time and notification settings
 3. Redirect to Google Maps for directions back to your parking spot
 
+[Check out our video!](https://youtu.be/jerz8TjsoiI)
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
